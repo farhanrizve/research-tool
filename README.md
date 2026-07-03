@@ -69,17 +69,17 @@ research-tool/
 
 ## 🧠 Key Skills at a Glance
 
-| Category | Skills |
-| ---------- | ------- |
-| **Literature Review** | `academic-researcher`, `deep-research`, `tavily-research` |
-| **Paper Analysis** | `pdf`, `docx`, `xlsx`, `mcp_web-reader-se_webReader` |
-| **LaTeX / Thesis** | `latex-paper-en`, `latex-thesis-zh`, `research-paper-writer` |
-| **Data Analysis** | `analyze`, `data-storytelling`, `data-quality-frameworks` |
-| **Writing & Polish** | `humanize-academic-writing`, `humanizer` |
-| **Web / Browser** | `web-search`, `browser-use` |
-| **Python Development** | 13 skills covering structure, style, testing, packaging, performance |
-| **AI / ML** | `rag-implementation`, `ml-pipeline-workflow`, `prompt-engineering-patterns` |
-| **MCP Servers** | `multi-mcp`, `blind-auditor`, `puppeteer`, `brave-search` |
+| Category               | Skills                                                                      |
+| ---------------------- | --------------------------------------------------------------------------- |
+| **Literature Review**  | `academic-researcher`, `deep-research`, `tavily-research`                   |
+| **Paper Analysis**     | `pdf`, `docx`, `xlsx`, `mcp_web-reader-se_webReader`                        |
+| **LaTeX / Thesis**     | `latex-paper-en`, `latex-thesis-zh`, `research-paper-writer`                |
+| **Data Analysis**      | `analyze`, `data-storytelling`, `data-quality-frameworks`                   |
+| **Writing & Polish**   | `humanize-academic-writing`, `humanizer`                                    |
+| **Web / Browser**      | `web-search`, `browser-use`                                                 |
+| **Python Development** | 13 skills covering structure, style, testing, packaging, performance        |
+| **AI / ML**            | `rag-implementation`, `ml-pipeline-workflow`, `prompt-engineering-patterns` |
+| **MCP Servers**        | `multi-mcp`, `blind-auditor`, `puppeteer`, `brave-search`                   |
 
 See [`AGENTS.md`](AGENTS.md) for the complete catalog with trigger keywords.
 
@@ -87,13 +87,13 @@ See [`AGENTS.md`](AGENTS.md) for the complete catalog with trigger keywords.
 
 ## 📖 Documentation
 
-| Document | Purpose |
-| ---------- | -------- |
-| [`AGENTS.md`](AGENTS.md) | Full catalog of AI skills, MCP servers, and agents |
-| [`SETUP.md`](SETUP.md) | Detailed installation and dependency guide |
-| [`RESEARCH_WORKFLOW.md`](RESEARCH_WORKFLOW.md) | Workflow guides, storage conventions, and best practices |
-| [`templates/latex-guide.md`](templates/latex-guide.md) | Comprehensive LaTeX reference |
-| [`templates/thesis-book/`](templates/thesis-book/) | Full thesis book template (6 chapters) |
+| Document                                               | Purpose                                                  |
+| ------------------------------------------------------ | -------------------------------------------------------- |
+| [`AGENTS.md`](AGENTS.md)                               | Full catalog of AI skills, MCP servers, and agents       |
+| [`SETUP.md`](SETUP.md)                                 | Detailed installation and dependency guide               |
+| [`RESEARCH_WORKFLOW.md`](RESEARCH_WORKFLOW.md)         | Workflow guides, storage conventions, and best practices |
+| [`templates/latex-guide.md`](templates/latex-guide.md) | Comprehensive LaTeX reference                            |
+| [`templates/thesis-book/`](templates/thesis-book/)     | Full thesis book template (6 chapters)                   |
 
 ---
 
@@ -101,13 +101,13 @@ See [`AGENTS.md`](AGENTS.md) for the complete catalog with trigger keywords.
 
 This repository is designed for **VS Code + GitHub Copilot**. When you describe a task in natural language, Copilot automatically activates the relevant skill from `.agents/skills/` to guide the AI assistant:
 
-> *"Review this paper PDF"* → activates `pdf` + `academic-researcher` skills
+> _"Review this paper PDF"_ → activates `pdf` + `academic-researcher` skills
 >
-> *"Compile my thesis"* → activates `latex-paper-en` skill
+> _"Compile my thesis"_ → activates `latex-paper-en` skill
 >
-> *"Analyze this CSV dataset"* → activates `analyze` + `xlsx` skills
+> _"Analyze this CSV dataset"_ → activates `analyze` + `xlsx` skills
 >
-> *"Humanize this chapter"* → activates `humanize-academic-writing` skill
+> _"Humanize this chapter"_ → activates `humanize-academic-writing` skill
 
 No commands to remember — just describe what you need.
 
@@ -115,12 +115,12 @@ No commands to remember — just describe what you need.
 
 ## 🔧 Optional MCP Servers
 
-| Server | Purpose | Setup |
-| ------ | ------- | ----- |
-| **puppeteer** | Browser automation & web scraping | `npm install -g mcp-server-puppeteer` |
-| **brave-search** | Web search via Brave API | Requires API key |
-| **multi-mcp** | Multi-model code review (GPT+Claude+Gemini) | Clone to `.mcp-servers/` |
-| **blind-auditor** | Self-auditing code review | Clone to `.mcp-servers/` |
+| Server            | Purpose                                     | Setup                                 |
+| ----------------- | ------------------------------------------- | ------------------------------------- |
+| **puppeteer**     | Browser automation & web scraping           | `npm install -g mcp-server-puppeteer` |
+| **brave-search**  | Web search via Brave API                    | Requires API key                      |
+| **multi-mcp**     | Multi-model code review (GPT+Claude+Gemini) | Clone to `.mcp-servers/`              |
+| **blind-auditor** | Self-auditing code review                   | Clone to `.mcp-servers/`              |
 
 ---
 
