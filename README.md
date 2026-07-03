@@ -47,7 +47,7 @@ python scripts/check_environment.py
 
 ## 📂 Project Structure
 
-```
+```text
 research-tool/
 ├── AGENTS.md                 ← Full skill/MCP/agent catalog
 ├── SETUP.md                  ← Installation & dependency guide
@@ -70,7 +70,7 @@ research-tool/
 ## 🧠 Key Skills at a Glance
 
 | Category | Skills |
-|----------|--------|
+| ---------- | ------- |
 | **Literature Review** | `academic-researcher`, `deep-research`, `tavily-research` |
 | **Paper Analysis** | `pdf`, `docx`, `xlsx`, `mcp_web-reader-se_webReader` |
 | **LaTeX / Thesis** | `latex-paper-en`, `latex-thesis-zh`, `research-paper-writer` |
@@ -88,7 +88,7 @@ See [`AGENTS.md`](AGENTS.md) for the complete catalog with trigger keywords.
 ## 📖 Documentation
 
 | Document | Purpose |
-|----------|---------|
+| ---------- | -------- |
 | [`AGENTS.md`](AGENTS.md) | Full catalog of AI skills, MCP servers, and agents |
 | [`SETUP.md`](SETUP.md) | Detailed installation and dependency guide |
 | [`RESEARCH_WORKFLOW.md`](RESEARCH_WORKFLOW.md) | Workflow guides, storage conventions, and best practices |
@@ -116,7 +116,7 @@ No commands to remember — just describe what you need.
 ## 🔧 Optional MCP Servers
 
 | Server | Purpose | Setup |
-|--------|---------|-------|
+| ------ | ------- | ----- |
 | **puppeteer** | Browser automation & web scraping | `npm install -g mcp-server-puppeteer` |
 | **brave-search** | Web search via Brave API | Requires API key |
 | **multi-mcp** | Multi-model code review (GPT+Claude+Gemini) | Clone to `.mcp-servers/` |
