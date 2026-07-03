@@ -1,0 +1,256 @@
+\documentclass[a4paper, 12pt, oneside]{book}
+% Allow the usage of UTF-8 characters
+\usepackage[utf8]{inputenc}
+% \setcounter is required to add subsubsections in the contents 
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{3}
+% set line spacing
+\renewcommand{\baselinestretch}{1.5}
+\usepackage{graphicx} % % Required for inserting images
+\usepackage{indentfirst} \setlength{\parindent}{1cm}
+\usepackage{pdfpages}
+\usepackage{txfonts}
+\usepackage{booktabs}
+\usepackage{csquotes}
+\let\iint\relax
+\let\iiint\relax
+\let\iiiint\relax
+\let\idotsint\relax
+\usepackage{amsmath}
+\usepackage{anyfontsize}
+\usepackage{enumitem}
+\usepackage{amssymb}
+\usepackage{secdot}
+% uncomment the package hyperref to enable hyper referencing
+%\usepackage{hyperref}
+\usepackage[nameinlink, capitalize]{cleveref}
+\usepackage{titlesec}
+\usepackage{lipsum}
+\usepackage{url}
+%\usepackage{abstract}
+\usepackage{caption}
+\usepackage{layout}
+\usepackage{blindtext}
+%\usepackage[mathletters]{ucs}
+\usepackage{float}
+%\usepackage[table,xcdraw]{xcolor}
+\graphicspath{ {images/} }
+\usepackage{times}
+\usepackage{geometry}
+% Line spacing
+\usepackage{setspace}
+\usepackage{tocloft}
+\usepackage{datetime}
+\usepackage{tabu}
+\usepackage{fancyhdr}
+
+% Set the page margins
+\geometry{a4paper, tmargin=1in, rmargin=0.8in, bmargin=1in, lmargin=1.2in}
+
+\usepackage[T1]{fontenc}
+
+%\usepackage{multicol}
+%\setlength{\columnsep}{1cm}
+%\captionsetup{width = 0.93\textwidth}
+\newdateformat{monthyeardate}{%
+  \monthname[\THEMONTH], \THEYEAR}
+  
+% References are to be added in Refs.bib and cited in any part of the document.
+
+
+% For Figures and Subfigures
+\usepackage{graphicx, caption, subcaption}
+
+% Package for block commenting
+\usepackage{comment}
+
+\usepackage{physics}
+
+% Package to keep images in place
+\usepackage{float}
+
+% Package for Appendices
+\usepackage{titletoc}
+\usepackage{appendix}
+
+% Chapter and Appendix in TOC prefixed
+\makeatletter
+\titlecontents{chapter}%
+ [0pt]% 
+ {\bfseries}%
+ {\@chapapp\ \thecontentslabel\quad}% 
+ {}% 
+ {\normalfont\cftdotfill{\cftdotsep}\contentspage}% 
+ [\addvspace{0pt}]% 
+
+\g@addto@macro\appendices{%
+  \addtocontents{toc}{\protect\renewcommand{\protect\@chapapp}{\appendixname}}%
+}
+\makeatother
+
+
+% Package for codes
+\usepackage{listings}
+\lstset{
+    breaklines = true,
+    captionpos = b,
+    numberstyle = \scriptsize,
+    numbers=left,                    
+    numbersep=10pt
+}
+
+%Chapter Title Customization
+\usepackage{titlesec}
+
+\titleformat{\chapter}[display]
+{\Large\bfseries}{\chaptertitlename\ \thechapter}{5pt}{\Large}
+\titlespacing*{\chapter}{0pt}{0pt}{20pt}
+
+% Section Customization
+\titleformat{\section}{\large \bfseries}{\thesection}{1em}{}
+
+% Sub-Section Customization
+\titleformat{\subsection}{\fontsize{13pt}{13pt} \bfseries}{\thesubsection}{1em}{}
+
+% Sub-Sub-Section Customization
+\titleformat{\subsubsection}{\fontsize{13pt}{13pt} \bfseries}{\thesubsubsection}{1em}{}
+
+%Align the titles
+\renewcommand*\contentsname{\Large Table of Contents}
+\renewcommand*\listfigurename{\fontsize{14pt}{16.8pt}\selectfont List of Figures}
+\renewcommand*\listtablename{\fontsize{14pt}{16.8pt}\selectfont List of Tables}
+
+
+%==================REFERENCES==========================
+% References Addition
+\usepackage[backend=biber, style=apa, bibencoding=ascii, maxbibnames=500, sorting=nyt]{biblatex}
+\addbibresource{Refs.bib} % name your BibTeX file and add here
+
+%=====================REFERENCES==========================
+
+% Page Style
+\pagestyle{fancy}
+\cfoot{\thepage}
+\rhead{}
+\lhead{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+
+%========================BEGINNING OF THE DOCUMENT===============
+\begin{document}
+
+% To expand the word spacing
+\spaceskip=1.5\fontdimen2\font plus 1.5\fontdimen3\font
+minus 1.5\fontdimen4\font
+
+
+%==================FRONT MATTER=================
+
+\frontmatter
+\clearpage
+\pagenumbering{gobble}
+\thispagestyle{empty}
+\input{Front Matter/TitlePage}
+
+% edit in the TitlePage.tex as per the requirement
+
+\clearpage
+\pagenumbering{roman}
+\setcounter{page}{2}
+\fontsize{12pt}{12pt}\selectfont
+\onehalfspacing
+\addtocontents{toc}{\hfill\textbf{Page No.}\par}
+\input{Front Matter/Transmittal}
+\input{Front Matter/Declaration}
+\input{Front Matter/Certificate}
+\input{Front Matter/Acknowledgement}
+\input{Abstract}
+
+% edit in the Transmittal.tex, Declaration.tex, Certificate.tex, Acknowledgement.tex
+
+%=================FRONT MATTER================
+
+
+% Table of Contents Page
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter} {Table of Contents}
+\tableofcontents
+
+% List of Tables Page
+\clearpage
+\phantomsection
+%\doublespacing
+\addcontentsline{toc}{chapter}{List of Tables}
+\listoftables
+%{\addtocontents{toc}{\textbf{Title}\hfill\textbf{Page No.}\par}}
+
+% List of Figures Page
+\clearpage
+\phantomsection
+%\doublespacing
+\addcontentsline{toc}{chapter}{List of Figures}
+\listoffigures
+
+
+%===============ABBREVIATIONS==============
+
+\input{Abbreviations}
+% edit in Abbreviations.tex
+
+%===============ABBREVIATIONS==============
+
+
+%===============CHAPTERS=====================
+
+% Main Content
+\mainmatter
+\onehalfspacing
+\input{Chapters/Chapter 1}
+\input{Chapters/Chapter 2}
+\input{Chapters/Chapter 3}
+\input{Chapters/Chapter 4}
+\input{Chapters/Chapter 5}
+\input{Chapters/Chapter 6}
+
+% edit in the Chapters
+
+%================CHAPTERS=====================
+
+\newpage
+\clearpage
+
+%==================Changing Bibliography to References===============
+
+\fontsize{12pt}{12pt}\selectfont
+
+% Change Bibliography to References
+\renewcommand\bibname{References}
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{References}
+\printbibliography
+
+% change the name of the bibresource from the preamble
+
+%==================Changing Bibliography to References===============
+
+\clearpage
+
+%==================APPENDICES==============
+% Appendices
+\fontsize{10pt}{10pt}\selectfont
+
+\begin{appendices}
+	\input{Chapters/Appendices}
+\end{appendices}
+
+% edit in Appendices.tex
+
+%==================APPENDICES==============
+
+\end{document}
+
+
+%=====================END OF THE DOCUMENT========================

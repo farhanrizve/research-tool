@@ -1,0 +1,9 @@
+%% =============================================================================
+%%  IMAGES — Placeholder for report figures and diagrams
+%%
+%%  Usage: Place your .png, .jpg, .pdf, or .eps files in this directory.
+%%  Reference them in chapters with:
+%%    \includegraphics[width=\textwidth]{images/your-figure.png}
+%%
+%%  The graphics path is configured in shared/packages.tex to include images/.
+%% =============================================================================

@@ -1,0 +1,95 @@
+%% =============================================================================
+%%  REPORT — Main Document
+%%  Reusable LaTeX report template based on thesis patterns from e:\github\thesis
+%%
+%%  Usage:
+%%    1. Edit front-matter/ files with your details
+%%    2. Edit chapters/ with your content
+%%    3. Edit shared/packages.tex if you need additional packages
+%%    4. Edit shared/references.bib with your bibliography
+%%    5. Compile: xelatex report.tex (or use latexmk)
+%% =============================================================================
+
+\documentclass[12pt,oneside]{book}
+
+%% ── Packages & Formatting ────────────────────────────────────────────────────
+\input{shared/packages}
+\input{shared/formatting}
+\input{shared/report-variables}
+
+\begin{document}
+
+%% ═════════════════════════════════════════════════════════════════════════════
+%%  FRONT MATTER
+%% ═════════════════════════════════════════════════════════════════════════════
+\frontmatter
+\thispagestyle{empty}
+\input{front-matter/title-page}
+
+\clearpage
+\pagenumbering{roman}
+\setcounter{page}{2}
+\onehalfspacing
+\addtocontents{toc}{\hfill\textbf{Page No.}\par}
+
+\input{front-matter/transmittal}
+\input{front-matter/declaration}
+\input{front-matter/certificate}
+\input{front-matter/acknowledgements}
+\input{front-matter/abstract}
+
+%% ── Table of Contents ────────────────────────────────────────────────────────
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{Table of Contents}
+\tableofcontents
+
+%% ── List of Tables ───────────────────────────────────────────────────────────
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{List of Tables}
+\listoftables
+
+%% ── List of Figures ──────────────────────────────────────────────────────────
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{List of Figures}
+\listoffigures
+
+%% ── Abbreviations ────────────────────────────────────────────────────────────
+\input{shared/abbreviations}
+
+%% ═════════════════════════════════════════════════════════════════════════════
+%%  MAIN MATTER — Chapters
+%% ═════════════════════════════════════════════════════════════════════════════
+\mainmatter
+\onehalfspacing
+
+%% ── Load per-chapter variables ───────────────────────────────────────────────
+\input{chapters/01-introduction/variables}
+\input{chapters/02-literature-review/variables}
+\input{chapters/03-methodology/variables}
+\input{chapters/04-results/variables}
+\input{chapters/05-discussion/variables}
+\input{chapters/06-conclusion/variables}
+
+%% ── Chapters ─────────────────────────────────────────────────────────────────
+\input{chapters/01-introduction/chapter}
+\input{chapters/02-literature-review/chapter}
+\input{chapters/03-methodology/chapter}
+\input{chapters/04-results/chapter}
+\input{chapters/05-discussion/chapter}
+\input{chapters/06-conclusion/chapter}
+
+%% ═════════════════════════════════════════════════════════════════════════════
+%%  BIBLIOGRAPHY
+%% ═════════════════════════════════════════════════════════════════════════════
+\clearpage
+\phantomsection
+\renewcommand{\bibname}{References}
+\addcontentsline{toc}{chapter}{References}
+\nocite{*}
+\bibliography{shared/references}
+\bibliographystyle{apalike}
+
+\end{document}

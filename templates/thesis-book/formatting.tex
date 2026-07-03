@@ -1,0 +1,66 @@
+\setlength{\parindent}{1cm}
+\setlength{\parskip}{2pt}
+
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{3}
+
+\onehalfspacing
+
+\titleformat{\chapter}[block]
+{\normalfont\fontsize{14}{17}\selectfont\bfseries}{\chaptername\ \thechapter\ }{0pt}{}
+\titlespacing*{\chapter}{0pt}{-30pt}{10pt}
+
+\newcommand{\frontchapter}[1]{{\titleformat{\chapter}[block]
+{\normalfont\fontsize{12}{15}\selectfont\bfseries}{}{0pt}{\fontsize{12}{15}\selectfont\bfseries}
+\chapter*{#1}}}
+
+\titleformat{\section}
+{\normalfont\normalsize\bfseries}{\thesection}{0.5em}{}
+\titlespacing{\section}{0pt}{8pt}{4pt}
+
+\titleformat{\subsection}
+{\normalfont\normalsize\bfseries}{\thesubsection}{0.5em}{}
+\titlespacing{\subsection}{0pt}{6pt}{3pt}
+
+\titleformat{\subsubsection}
+{\normalfont\normalsize\bfseries}{\thesubsubsection}{0.5em}{}
+\titlespacing{\subsubsection}{0pt}{6pt}{3pt}
+
+\captionsetup[table]{font={normalsize,bf},position=above,labelsep=colon,skip=4pt}
+\captionsetup[figure]{font=normalsize,position=below,labelsep=colon,skip=4pt}
+
+% Compact float spacing (parskip handles inter-paragraph separation)
+\setlength{\floatsep}{4pt}
+\setlength{\textfloatsep}{0pt}
+\setlength{\intextsep}{0pt}
+\setlength{\abovecaptionskip}{4pt}
+\setlength{\belowcaptionskip}{4pt}
+
+% Compact ToC, LoT, LoF spacing
+\setlength{\cftbeforetoctitleskip}{0pt}
+\setlength{\cftaftertoctitleskip}{8pt}
+\setlength{\cftbeforelottitleskip}{0pt}
+\setlength{\cftafterlottitleskip}{8pt}
+\setlength{\cftbeforeloftitleskip}{0pt}
+\setlength{\cftafterloftitleskip}{8pt}
+\setlength{\cftbeforesecskip}{3pt}
+\setlength{\cftbeforechapskip}{4pt}
+
+\pagestyle{fancy}
+\cfoot{\thepage}
+\rhead{}
+\lhead{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Widow/orphan control
+\widowpenalty=10000
+\clubpenalty=10000
+
+% Helper macro for LoT/LoF three-column table rows
+\makeatletter
+\def\lotfigline#1#2{#1 & #2 \\}
+\makeatother
+
+% Remove hanging indent from bibliography
+\setlength{\bibhang}{0pt}

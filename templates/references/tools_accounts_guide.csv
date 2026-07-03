@@ -1,0 +1,97 @@
+"Tool/Service","Type","Purpose","Priority","URL","Cost","Account Needed","Recommended Email","Research Phase","Notes"
+
+"GitHub","Account / Service","Code repository, version control, collaboration, and project management. Essential for managing research code and collaborating with team members.","High","https://github.com/","Free","Yes","Personal","Development","Apply for GitHub Education Pack (free with university email) — includes free Copilot, team plans.
+Use .gitignore for large data files.
+GitHub Actions for CI/CD pipeline testing."
+
+"Google Drive","Account / Service","Storing datasets, notes, backup files, and sharing large files. Cloud storage for research materials.","High","https://drive.google.com/","Free (15 GB)","Yes (Google)","Personal","All","Good for: backing up raw datasets, sharing large files, storing survey exports.
+Create shared research folder.
+University Google account may have unlimited storage.
+Use backup & sync for automatic backups."
+
+"Google Colab","Service","Running heavy data processing code in cloud using free GPU/TPU. Ideal for machine learning model training, large-scale data processing, and computationally intensive analysis.","High","https://colab.research.google.com/","Free tier (T4 GPU) + Pro ($10/mo)","Yes (Google)","Personal","Analysis, Methodology","Free tier: T4 GPU (16GB), ~12GB RAM, 12-hour sessions.
+Sufficient for many ML training tasks.
+Save notebooks to Google Drive.
+Colab Pro ($10/mo) is worth it for larger training jobs — priority GPU + longer runtimes."
+
+"Google Scholar (Account)","Account","Setting up search alerts, saving paper libraries, tracking citations, and exporting references. Account features complement the search platform.","High","https://scholar.google.com/","Free","Yes (Google)","Personal","Literature Review, All","Already covered as platform in Research Platforms sheet.
+Account features: email alerts for keywords, saved paper libraries, citation tracking.
+Use personal Gmail for persistent alerts across devices."
+
+"Overleaf","Service","Collaborative LaTeX document writing and editing. Write research papers, reports, or theses with real-time collaboration.","High","https://www.overleaf.com/","Free tier (1 project) + Paid","Yes","University","Writing","Free tier: 1 project limit, 120s compile.
+Check if your university has an institutional Overleaf license (many universities do).
+Link with GitHub for version control.
+Use master.tex + chapter subfiles structure for larger documents."
+
+"Google Forms","Service","Creating and distributing surveys for primary data collection. Useful for perception studies, market research, and gathering responses from target populations.","High","https://forms.google.com/","Free","Yes (Google)","Personal","Data Collection","Free, unlimited responses, CSV export.
+Use section breaks for multi-page surveys.
+Test with pilot respondents first.
+Response validation for quality control.
+Good for: questionnaires, feedback forms, registration forms."
+
+"Zotero","Software","Managing paper citations, organizing PDFs, generating bibliographies. Open-source with excellent LaTeX integration via Better BibTeX.","High","https://www.zotero.org/","Free (300 MB storage) + Paid upgrade","Yes","Personal","Literature Review, Writing","Zotero recommended over Mendeley: (1) Browser connector saves papers one-click, (2) Better BibTeX extension for LaTeX .bib export, (3) Group libraries for team collaboration.
+Organize papers into thematic folders matching your research topics."
+
+"VS Code","Software","Primary code editor for development, data analysis scripts, LaTeX writing, and dashboard development. Extensible with thousands of extensions.","High","https://code.visualstudio.com/","Free","No","N/A","Development","Essential extensions: Python (Microsoft), LaTeX Workshop (James Yu), GitLens (GitKraken), Live Share (real-time collaboration), GitHub Copilot (AI assistance), YAML, Rainbow CSV, Docker.
+Settings sync via GitHub account."
+
+"Anaconda / Miniconda","Software","Python environment management for data science and machine learning projects. Conda environments for managing project dependencies across different tools and frameworks.","High","https://www.anaconda.com/","Free","No","N/A","Development","Create separate conda environments for different project components to manage dependencies cleanly.
+Use environment.yml files for reproducibility.
+Miniconda (lightweight) recommended over full Anaconda — install only what you need."
+
+"Docker","Software","Containerization platform for reproducible development environments. Package applications and data processing pipelines into portable containers.","High","https://www.docker.com/","Free (Docker Desktop)","Yes (Docker Hub account)","Personal","Development, Deployment","Write Dockerfiles for individual services and docker-compose.yml for full stack orchestration.
+Ensures reproducibility across different machines.
+Docker Hub for sharing container images.
+Free for personal use."
+
+"MiKTeX","Software","Local LaTeX distribution for compiling documents offline on Windows. Alternative: TeX Live (cross-platform).","High","https://miktex.org/","Free","No","N/A","Writing","Easiest LaTeX distribution on Windows.
+Install Perl (for latexmk) and use VS Code LaTeX Workshop extension for integrated compile.
+Auto-installs missing packages on-the-fly.
+Also use: latexmk -xelatex for compilation."
+
+"Draw.io / diagrams.net","Software","Create figures and diagrams: architecture diagrams, workflow charts, methodology figures, pipeline visualizations.","Mid","https://app.diagrams.net/","Free","No","N/A","Writing, Methodology","VS Code extension available (draw.io integration).
+Templates for: flowcharts, network diagrams, architecture diagrams.
+Export to: SVG (vector — best for publications), PNG, PDF.
+Use for: pipeline architecture, methodology flow, comparison visualizations."
+
+"Grammarly / LanguageTool","Software","Writing assistance for academic papers, reports, and other documents. Grammar, clarity, tone, and vocabulary improvements.","Mid","https://www.grammarly.com/","Free tier + Premium ($12/mo)","Yes","Personal","Writing","Grammarly Premium has .edu discount.
+Free tier catches: spelling, grammar, punctuation.
+Premium: clarity improvements, tone detection, plagiarism check.
+LanguageTool is an open-source alternative.
+Use for final polish of documents before submission."
+
+"Turnitin","Service","Plagiarism detection and similarity checking. Required by many institutions before final submission of dissertations or theses.","High","https://www.turnitin.com/","Institutional","Yes (university account)","University","Writing","Check if your institution provides Turnitin access.
+Most universities do.
+Submit document chapters before final submission to check similarity score.
+Target: <20% similarity.
+Exclude bibliography and quoted material.
+Alternative: Grammarly Premium includes plagiarism checking."
+
+"Notion / Trello","Service","Project management for research teams. Track progress, assign tasks, manage timeline and milestones.","Mid","https://www.notion.so/","Free tier (Notion) + Paid","Yes","Personal","All","Notion recommended for project tracking.
+Create: shared workspace with pages for each deliverable, task board for team members, timeline view for deadlines, meeting notes database.
+Free for personal use with unlimited pages.
+Trello is a simpler alternative if Notion is too much."
+
+"WhatsApp / Slack","Service","Team communication for daily coordination among research team members and supervisors.","Mid","https://slack.com/","Free (both)","Yes","Personal","All","Slack recommended for channel-based organization (#literature-review, #data-collection, #writing), file sharing, integration with GitHub/Google Drive.
+Free Slack: 90-day message history, 10 app integrations.
+WhatsApp is a simpler alternative widely used for instant communication."
+
+"Git LFS","Service","Large file storage extension for Git. Store datasets, model files, and other large assets without bloating the repository.","Mid","https://git-lfs.com/","Free tier (1 GB storage, 1 GB bandwidth/month) + Paid","Yes (GitHub)","Personal","Development","CSV datasets and model files are often too large for regular Git (GitHub has 100MB file limit).
+Git LFS handles them.
+Install: git lfs install.
+Track: git lfs track '*.csv' '*.pth' '*.h5'.
+Free tier: 1 GB storage — enough for CSV datasets but not large model checkpoints."
+
+"FileZilla / WinSCP","Software","FTP/SFTP client for deploying web applications to shared hosting servers.","Mid","https://filezilla-project.org/","Free","No","N/A","Deployment","Connect via SFTP (SSH) for security.
+Transfer: compiled assets, vendor folder, uploads.
+Use .gitignore to exclude sensitive files.
+WinSCP is a Windows alternative with sync features."
+
+"Tableau Public","Software","Data visualization platform for creating interactive charts and dashboards for research figures.","Mid","https://public.tableau.com/","Free (Public) + Paid (Desktop)","Yes","Personal","Analysis, Writing","Create interactive visualizations of research findings.
+Free Tableau Public: publish to web, unlimited visualizations.
+Good for: comparison charts, trend lines, cross-group comparisons.
+Embed screenshots in documents or supplement with interactive web versions."
+
+"Better BibTeX (Zotero Extension)","Software (Extension)","Zotero extension that automatically generates .bib files for LaTeX. Keeps citations synchronized between Zotero and Overleaf or local LaTeX editors.","High","https://retorque.re/zotero-better-bibtex/","Free (open source)","No","N/A","Writing","Install in Zotero → exports .bib file automatically on any change.
+Features: (1) citation keys like author2024title, (2) auto-export to .bib file, (3) drag-and-drop citations from Zotero to LaTeX, (4) works with Overleaf via WebDAV sync or manual upload."
+

@@ -1,0 +1,41 @@
+{
+  "name": "research-tool",
+  "version": "1.0.0",
+  "description": "AI-assisted research tool with templates, scripts, and MCP servers for academic thesis/dissertation projects",
+  "private": true,
+  "dependencies": {
+    "@playwright/test": "^1.60.0",
+    "docx": "^9.6.1",
+    "markdown-it": "^14.0.0",
+    "playwright-core": "^1.60.0",
+    "pptxgenjs": "^4.0.1"
+  },
+  "devDependencies": {
+    "prettier": "^3.2.0"
+  },
+  "scripts": {
+    "test": "echo \"No tests specified yet\" && exit 0",
+    "format": "prettier --write \"scripts/**/*.py\" \"**/*.md\" \"**/*.json\"",
+    "format:check": "prettier --check \"scripts/**/*.py\" \"**/*.md\" \"**/*.json\"",
+    "setup": "powershell -ExecutionPolicy Bypass -File scripts/setup_env.ps1",
+    "validate:json": "node -e \"const fs=require('fs'); const g=JSON.parse(fs.readFileSync('.vscode/mcp.json','utf8')); console.log('✅ .vscode/mcp.json valid'); const s=JSON.parse(fs.readFileSync('.vscode/settings.json','utf8')); console.log('✅ .vscode/settings.json valid');\"",
+    "lint:py": "pip install ruff -q && ruff check scripts/ --ignore E501",
+    "docs": "npx -y @mintlify/scrape@latest --output docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [
+    "research",
+    "thesis",
+    "academic",
+    "ai",
+    "latex",
+    "data-analysis",
+    "nlp"
+  ],
+  "author": "",
+  "license": "MIT",
+  "type": "commonjs"
+}

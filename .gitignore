@@ -1,0 +1,124 @@
+# ── Dependencies ──────────────────────────────────────────────────────────────
+node_modules/
+.venv/
+vendor/
+
+# ── Build Outputs ────────────────────────────────────────────────────────────
+dist/
+build/
+*.egg-info/
+*.whl
+
+# ── Temp / Archives ──────────────────────────────────────────────────────────
+temp/
+archives/
+tmp/
+*.tmp
+*.bak
+*.swp
+*.swo
+
+# ── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+logs/
+
+# ── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+coverage/
+htmlcov/
+
+# ── Jupyter ──────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+.zeppelin/
+
+# ── Research / Data Outputs ──────────────────────────────────────────────────
+outputs/
+data/outputs/
+pipeline/outputs/
+model_state/
+*.safetensors
+*.pth
+*.pt
+*.onnx
+
+# ── IDE / Editor ─────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+.nyc_output/
+
+# ── OS ───────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+Desktop.ini
+ehthumbs.db
+
+# ── Playwright / Browser ─────────────────────────────────────────────────────
+.playwright-mcp/
+playwright-report/
+test-results/
+screenshots/
+videos/
+traces/
+downloads/
+browser.log
+
+# ── LaTeX Build Artifacts ────────────────────────────────────────────────────
+*.aux
+*.toc
+*.bcf
+*.bbl
+*.blg
+*.out
+*.lof
+*.lot
+*.run.xml
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.pdf
+
+# ── Claude / AI State ────────────────────────────────────────────────────────
+.claude_consciousness.m8
+.claude/
+*.claude.json
+
+# ── Agent Skills ────────────────────────────────────────────────────────────
+# Agent skill files in .agents/skills/ MUST be tracked (they're not in here
+# by default, but this explicit rule prevents accidental future ignores)
+!.agents/
+
+# ── Environment ──────────────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.cert
+
+# ── Large Datasets (track via DVC or external storage) ───────────────────────
+data/raw/
+data/processed/
+*.csv
+!data/*.csv
+!templates/references/*.csv
+
+# ── Generated Documentation ──────────────────────────────────────────────────
+out/
+site/
+_build/
+book/

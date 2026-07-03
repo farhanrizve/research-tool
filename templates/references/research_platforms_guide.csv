@@ -1,0 +1,226 @@
+"Platform","Category","Subcategory","Priority","URL","Coverage","Best For","Access Type","WUB Access","Account Needed","Recommended Email","Research Phase","Status","Notes"
+
+"Google Scholar","Academic Database","General Search","High","https://scholar.google.com/","All academic disciplines","Broad discovery, citation tracking, and setting up research alerts. Start here for any literature review.","Free","✅ Free (no account needed for basic use)","Yes (Google)","Personal","Literature Review, All","Exploring","Best first-stop for any research.
+Use with advanced search operators (quotes, OR, date ranges).
+Set up email alerts for key search terms.
+Export citations to Zotero/Mendeley.
+Weakness: struggles with niche keyword combinations — use specialized databases for focused searches."
+
+"IEEE Xplore","Academic Database","Engineering & Technology","High","https://ieeexplore.ieee.org/","Engineering, Computer Science, Electronics","Technical papers, engineering research, computing methodology, and hardware-adjacent research.","Institutional","❌ Not confirmed via WUB Library","Yes","University","Literature Review, Methodology","Exploring","Essential for engineering and computing research.
+Use university email for full-text access.
+Conference proceedings are often more current than journals for fast-moving fields.
+Use 'Citation History' to track landmark papers.
+Personal account saves searches and creates alerts."
+
+"ACM Digital Library","Academic Database","Computer Science","High","https://dl.acm.org/","Computer Science, Information Systems, Software Engineering","Core computing and software research. Covers algorithms, AI, data science, HCI, programming languages, and software engineering.","Open Access + Institutional","❌ Not confirmed via WUB Library","Yes (optional for OA)","University","Literature Review, Methodology","Exploring","ACM has two tiers: OA papers (free) + subscription content.
+Many authors post preprints on arXiv or personal sites.
+ACM Computing Surveys publishes excellent review papers across many domains.
+Use ACM Classification System (CCS) for precise filtering.
+If paywalled, try Unpaywall or contact authors via ResearchGate."
+
+"Scopus","Academic Database","Multidisciplinary","High","https://www.scopus.com/","All disciplines (Science, Tech, Medicine, Social Sciences)","Citation tracking, finding high-impact papers, systematic literature reviews, and bibliometric analysis.","Institutional","✅ Confirmed via WUB Library","Optional","University","Literature Review, Methodology","Exploring","Confirmed accessible via WUB Library!
+Use campus network/IP to access.
+Scopus has superior citation data vs Google Scholar — 28K+ active journals.
+Use 'Analyze Search Results' to see publication trends by year — great for identifying if a research topic is growing or declining.
+Also useful for finding journal impact metrics."
+
+"Web of Science","Academic Database","Multidisciplinary","Mid","https://www.webofscience.com/","All disciplines (Science, Social Sciences, Arts & Humanities)","Finding high-impact journal papers, journal citation metrics (JCR), unique coverage in social sciences & humanities.","Institutional","❌ Not confirmed via WUB Library","Yes","University","Literature Review","Not Started","Lower priority since Scopus is available.
+WoS and Scopus overlap ~70% in journal coverage.
+Use WoS specifically for: (1) Journal Citation Reports (JCR) impact factors, (2) Systematic reviews needing both databases, (3) Arts/humanities coverage.
+Alternative: access individual papers via author preprints or Unpaywall."
+
+"ScienceDirect","Academic Database","Science & Engineering","Mid","https://www.sciencedirect.com/","Science, Engineering, Health, Social Sciences","Peer-reviewed STEM journal articles. Strong coverage across engineering, natural sciences, and social sciences.","Institutional + Open Access","❓ Not directly confirmed via WUB Library","Yes","University","Literature Review, Methodology","Exploring","Use university email for best access.
+If paywalled, check for: (1) arXiv preprint, (2) author's ResearchGate profile, (3) Unpaywall extension.
+Since Scopus (also Elsevier) is widely available, some Elsevier access may exist through institutional subscriptions — check with your librarian."
+
+"SpringerLink","Academic Database","Science & Technology","High","https://link.springer.com/","Science, Technology, Medicine, Mathematics, Social Sciences","Books, major conference proceedings, and peer-reviewed journals across science and technology fields.","Institutional","✅ Confirmed via WUB Library","Optional","University","Literature Review, All","Exploring","Confirmed accessible via WUB Library!
+Springer's LNCS (Lecture Notes in CS) series is a major source for computing conference proceedings.
+Use advanced search filters by discipline, date, and content type.
+Also check Springer's open access options (CC-licensed articles)."
+
+"JSTOR","Academic Database","Humanities & Social Sciences","Mid","https://www.jstor.org/","Humanities, Social Sciences, Arts, Education","Education research, social science methodology, historical literature, and organizational studies.","Free tier (JPASS) + Institutional","❌ Not confirmed via WUB Library","Yes","University","Literature Review, Theoretical Framework","Not Started","JSTOR offers JPASS — 100 free article views/month with personal account (no institutional login needed).
+Useful for social sciences, humanities, and education research.
+Also has research methodology guides."
+
+"arXiv","Preprint Server","Physics Math & CS","High","https://arxiv.org/","Physics, Mathematics, Computer Science, Statistics","Free preprints of the latest research. Essential for staying current in fast-moving research fields across STEM.","Free (Open Access)","✅ Free (no institutional access needed)","No (optional for submissions)","N/A","Literature Review, All","Exploring","Essential free resource!
+Search by arXiv subject areas (e.g., cs, math, physics, stat).
+Set up 'New submissions' email alerts for specific categories.
+Warning: Preprints are NOT peer-reviewed — always verify if the work was later published in a peer-reviewed venue.
+Use arxiv-vanity.com for better PDF reading."
+
+"ResearchGate","Academic Database","Social Network / Repository","Mid","https://www.researchgate.net/","All academic disciplines","Getting free PDFs of paywalled papers by requesting directly from authors. Following researchers and discovering related work.","Free","✅ Free (no institutional access needed)","Yes","University","Literature Review","Exploring","Best backup for paywalled papers.
+Use 'Request full-text' to email the author directly.
+Response rate ~60-70% within a few days.
+Also useful for following researchers and seeing citation networks."
+
+"SSRN","Preprint Server","Social Sciences & Economics","Mid","https://www.ssrn.com/","Social Sciences, Economics, Law, Business, Humanities","Early research drafts and preprints in social sciences, economics, and law. Good for finding working papers before formal publication.","Free (Open Access)","✅ Free (no institutional access needed)","Optional","University","Literature Review, Background","Not Started","Owned by Elsevier but remains free to read.
+Good for: economics, labor studies, education policy, and legal research.
+Many international organizations (World Bank, IMF) and researchers post working papers here before journal publication.
+Use 'Top Papers' rankings to find influential working papers."
+
+"PubMed / PMC","Academic Database","Biomedical & Health","Mid","https://pubmed.ncbi.nlm.nih.gov/","Biomedical, Health, Life Sciences","Biomedical literature, health sciences, and life science research papers.","Free","✅ Confirmed via WUB Library","Optional","Personal or University","Literature Review","Exploring","PubMed (citations) is free; PMC (PubMed Central) provides free full-text access.
+WUB Library has PubMed as a quick-link resource.
+Tip: PMC's full-text corpus is available for text mining (PMC Open Access Subset).
+Essential for biomedical and health-related research."
+
+"CORE","Academic Database","Open Access Aggregator","Mid","https://core.ac.uk/","All academic disciplines","Sourcing open-access papers completely free. Finding content from institutional repositories, theses, and dissertations.","Free (Open Access)","✅ Free (no institutional access needed)","Optional","Personal","Literature Review, All","Exploring","World's largest open-access aggregator — harvests content from 10K+ repositories.
+Use when: you find a paywalled paper, check CORE for OA version.
+Also excellent for finding theses and dissertations.
+Has a free API for programmatic access."
+
+"Semantic Scholar","Discovery Tool","Computer Science & AI","High","https://www.semanticscholar.org/","Computer Science, AI, Neuroscience, Biomedical","AI-powered semantic paper matching, TLDR summaries, and citation graph visualization. Excellent for discovering related research.","Free","✅ Free (no institutional access needed)","Optional","Personal","Literature Review, All","Exploring","Built by Allen Institute for AI.
+Key features: TLDR AI-generated summaries, 'Highly Influential Citations' filter, semantic graph visualization.
+Use the API for programmatic search and 'Research Feeds' for personalized paper recommendations.
+Particularly strong in computing and AI fields."
+
+"Connected Papers","Discovery Tool","All Fields","Mid","https://www.connectedpapers.com/","All academic disciplines","Building visual web graphs of connected research. Discovering papers that cite or are cited by the same sources as a known paper.","Free tier (limited) + Paid Pro","✅ Free tier available","Yes (optional)","Personal","Literature Review","Exploring","Great for literature review expansion.
+Start with one key paper → graph of related work.
+Uses co-citation + bibliographic coupling.
+Free tier: ~5 graphs/month.
+Use early in literature review to map research landscape."
+
+"Elicit","Discovery Tool","All Fields","Mid","https://elicit.com/","All academic disciplines","AI-powered extraction of methodology, results, and findings across multiple papers. Ask research questions and get structured answers.","Free tier + Paid Pro","✅ Free tier available","Yes","Personal","Literature Review, Analysis","Exploring","Use for efficient literature review.
+Instead of reading 20 papers manually, ask Elicit to extract columns (method, sample size, findings) across papers.
+Free tier limited (~5-10 searches/month).
+Best for: comparing methodologies across multiple papers systematically."
+
+"Consensus","Discovery Tool","All Fields","Mid","https://consensus.app/","All academic disciplines","Getting research-backed answers to plain questions. Quickly checking if there's scientific consensus on a topic.","Free tier + Paid Premium","✅ Free tier available","Yes","Personal","Literature Review, Quick checks","Exploring","Quickest way to check research-backed claims.
+Ask question → get answer synthesized from multiple papers with citations.
+Free tier functional for basic queries.
+Best for: checking assumptions, finding papers on specific relationships, quick literature overview."
+
+"WEF Future of Jobs Report","Industry Report","Workforce Trends & Projections","High","https://www.weforum.org/","Global — 22 industry clusters, 55+ economies","Global workforce trends, job market projections, and analysis of how technology and AI are reshaping employment. Published annually.","Free (PDF report)","✅ Free (public report)","No","N/A","Literature Review, Background","Exploring","Published annually — each edition covers job growth projections through the next 3-5 years.
+Useful for identifying emerging job categories, tracking automation/AI displacement trends, and understanding global skill shifts.
+Download full PDF for valuable data tables in appendices."
+
+"CompTIA","Industry Report","Technology Workforce","High","https://www.comptia.org/","US tech workforce, global IT trends","Technology workforce analysis and hiring reports. US tech employment data, skill demand trends, and employer benchmarks.","Free (reports)","✅ Free (public reports)","Optional","Personal","Literature Review, Background, Cross-Country","Exploring","'State of the Tech Workforce' is the go-to source for US tech employment numbers, hiring projections, and skill demand rankings.
+Also publishes role-specific reports (Cybersecurity, Cloud, AI).
+Tech Town Index rates US metropolitan areas for tech jobs."
+
+"Stack Overflow Annual Survey","Industry Report","Developer Trends","High","https://survey.stackoverflow.co/","Global developer community (60K+ respondents/year)","Largest annual survey of software developers worldwide. Covers programming languages, tools, frameworks, salaries, and developer demographics.","Free (full data + raw CSV)","✅ Free (public data)","No","N/A","Literature Review, Background","Exploring","Raw CSV data is publicly downloadable — researchers can run their own analysis.
+Covers: programming languages, frameworks, tools, salary by country, education levels, experience.
+The 'Technology' section ranks technologies by usage percentage.
+Useful for validating technology adoption trends."
+
+"HackerRank","Industry Report","Developer Skills Assessment","Mid","https://www.hackerrank.com/","Global developer community","Country-level programming proficiency rankings, skill benchmarks, and hiring assessment trends.","Free (reports)","✅ Free (public reports)","Optional","Personal","Background, Cross-Country","Not Started","'Developer Skills Report' ranks countries by programming proficiency.
+Shows which skills are tested most in hiring assessments (SQL, Problem Solving, Python).
+Data biased toward HackerRank users — use for supplementary context only."
+
+"Pearson VUE","Industry Report","Certification & Professional Exams","Mid","https://www.pearsonvue.com/","Global IT and professional certification data","Global IT and professional certification trends. Exam volume data, certification popularity, testing trends.","Free (reports)","✅ Free (public reports)","No","N/A","Background, Certification Analysis","Not Started","Pearson VUE publishes annual 'Testing Trends' reports showing exam volumes for major certifications (CompTIA, Cisco, Microsoft, AWS).
+Useful for understanding which certifications are growing in demand.
+Data shows certification trends by region."
+
+"Foote Partners","Industry Report","Salary & Compensation Benchmarks","Mid","https://www.footepartners.com/","US/North America IT salary data","Skills pay premiums and salary market benchmarks. Data on which skills command higher compensation.","Paid (reports behind paywall)","❌ Mostly paid","Yes","N/A","Background, Cross-Country","Not Started","Publishes quarterly 'IT Skills & Certifications Pay Index' — tracks which skills earn salary premiums.
+Most detailed data behind paywall.
+US/North America focused.
+Use free summaries for supplementary context."
+
+"Lightcast","Industry Report","Labor Market Analytics","High","https://lightcast.io/","US labor market (formerly Emsi Burning Glass)","Detailed structural labor market records. Real-time job posting data, skill demand analytics, employer requirement shifts.","Free reports + Paid API","✅ Free reports available","Yes (free account)","Personal","Literature Review, Background, Methodology","Exploring","Gold standard for labor market analytics — analyzes millions of job postings.
+Free reports + blog posts are valuable.
+Skill Infrastructure taxonomy is a useful reference for standardizing skill names in any labor-related research."
+
+"Burning Glass","Industry Report","Real-time Job Analytics","Mid","https://www.burning-glass.com/","US labor market","Real-time tracking of employer requirement shifts. Job posting analytics and skill trend data.","Free reports + Paid","✅ Free reports available","Yes","Personal","Background, Historical trends","Not Started","Acquired by Lightcast (2021) — same company.
+Research arm still publishes under both brands.
+Focus on Lightcast for current data; Burning Glass archives for historical trend analysis (pre-2021)."
+
+"World Bank","Industry Report","Socio-economic Development","High","https://www.worldbank.org/","Global development data (250+ economies)","Broad socio-economic development datasets. Education, employment, and labor market data for developing countries worldwide.","Free (open data)","✅ Free (open data portal)","No","N/A","Literature Review, Background, Cross-Country","Exploring","World Development Indicators database includes education, employment, and ICT-related metrics.
+'Skills for Employability' program has country-specific reports.
+Use data.worldbank.org for quick statistical queries.
+Extensive education and employment data across 250+ economies."
+
+"ILO","Industry Report","Global Labor Statistics","High","https://www.ilo.org/","Global labor statistics (180+ countries)","Global labor statistics, employment rates, working conditions, and international labor standards.","Free (open data)","✅ Free (open data)","No","N/A","Literature Review, Background, Cross-Country","Exploring","ILOSTAT database has country-level employment data by sector.
+ISCO-08 classification is an ILO standard — useful for occupational classification in any labor research.
+'World Employment and Social Outlook' reports provide authoritative global labor data.
+Country-specific publications available."
+
+"ADB","Industry Report","Regional Development","High","https://www.adb.org/","Asia-Pacific development data","Regional development reports, labor market analysis, education-to-employment studies, and skill gap reports for Asia-Pacific countries.","Free (open reports)","✅ Free (open reports)","No","N/A","Literature Review, Background, Cross-Country","Exploring","Publishes extensive labor market and development reports for Asia-Pacific countries.
+'Asian Development Outlook' includes country-by-country chapters.
+'Skills Development' program reports are useful for education-to-employment research in developing Asia."
+
+"DBLP","Academic Database","Computer Science Bibliography","High","https://dblp.org/","Computer Science (7M+ publications, 5K+ venues)","The computer science bibliography. Finding CS conference and journal papers by venue, author, or year.","Free","✅ Free (no account needed)","No","N/A","Literature Review, All","Exploring","Essential for computer science research.
+Covers all major CS conferences and journals.
+Use for: finding papers by specific venue, tracking authors, checking publication dates.
+Free and open — no login needed.
+Has a search API for programmatic queries."
+
+"OpenAlex","Academic Database","Open Research Index","High","https://openalex.org/","All disciplines (250M+ works, 200K+ sources)","Free, open index of research works with programmatic API access. Successor to Microsoft Academic Graph.","Free","✅ Free (open index + API)","No","N/A","Literature Review, Methodology, Analysis","Exploring","Successor to Microsoft Academic Graph.
+Has a REST API for programmatic literature queries — useful for bibliometric analysis, trend identification, and cross-referencing research topics.
+Entire dataset available for bulk download.
+Much more powerful than Google Scholar for programmatic access."
+
+"DOAJ","Academic Database","Open Access Journals","Mid","https://doaj.org/","All disciplines (20K+ peer-reviewed OA journals)","Finding peer-reviewed open access journals. Sourcing freely accessible papers when institutional access fails.","Free","✅ Free (open index)","No","N/A","Literature Review, All","Not Started","Directory of Open Access Journals — 20K+ journals, all fully free.
+Use when: you hit a paywalled paper and need an OA alternative.
+Filter by subject, publisher, license type.
+Good for finding legitimate OA journals for potential publication."
+
+"Unpaywall","Discovery Tool","Browser Extension","High","https://unpaywall.org/","All disciplines","Browser extension that automatically finds free OA versions of paywalled papers when browsing.","Free","✅ Free (browser extension)","No","N/A","Literature Review, All","Exploring","Install in your browser.
+When you land on a paywalled paper page, Unpaywall automatically searches repositories for a free OA version.
+Works with Chrome, Firefox, Edge.
+Green/gold icon indicates OA availability.
+Sources from 100K+ repositories worldwide."
+
+"OpenReview","Discovery Tool","Open Peer Review","Mid","https://openreview.net/","Machine Learning, AI, Computer Science","Latest research before formal publication. Open peer review platform with public discussion and commentary.","Free","✅ Free (open platform)","Yes (optional)","Personal","Literature Review, Methodology","Not Started","Papers posted here often months before conference acceptance.
+Public peer review discussions provide insights into paper strengths and weaknesses.
+Good for tracking cutting-edge developments in AI, ML, and related fields."
+
+"Zenodo","Discovery Tool","Open Data Repository","Mid","https://zenodo.org/","All disciplines","Open data and paper repository by CERN. Finding datasets, supplementary materials, and research software.","Free","✅ Free (open repository)","Yes (optional)","Personal","Analysis, Methodology","Not Started","Created by CERN.
+Researchers upload datasets, code, and supplementary materials alongside their papers.
+Useful for finding: pre-trained models, annotated datasets, and code repositories.
+Also good for archiving your own research data (each upload gets a DOI).
+Has a REST API."
+
+"Kaggle","Discovery Tool","Data Science Platform","Mid","https://www.kaggle.com/","Data Science, Machine Learning","Public datasets for ML and data science projects. Notebooks with free GPU. Competitions for benchmarking models.","Free tier","✅ Free tier available","Yes (Google)","Personal","Analysis, Methodology","Not Started","50K+ public datasets across many domains.
+Free GPU for notebooks (alternative to Colab).
+Also has learning courses and community discussions.
+Useful for finding datasets relevant to your research domain."
+
+"ERIC","Academic Database","Education Research","Mid","https://eric.ed.gov/","Education, Learning Sciences, Curriculum Development","Education research database. Finding papers on curriculum design, educational technology, and learning outcomes.","Free","✅ Confirmed via WUB Library","No","N/A","Literature Review, Background","Not Started","Sponsored by the U.S. Department of Education's Institute of Education Sciences.
+The premier database for education-related research.
+Useful for finding studies on educational technology, online learning effectiveness, curriculum design, and education-to-employment research.
+Includes journal articles, conference papers, reports, and policy documents."
+
+"OECD","Industry Report","Global Skills Policy","High","https://www.oecd.org/","OECD countries + partner countries","Global skills policy data, education indicators, and international employment statistics.","Free (reports + data)","✅ Free (reports + data portal)","No","N/A","Literature Review, Background, Cross-Country","Exploring","OECD Skills Outlook and Survey of Adult Skills (PIAAC) are highly regarded for international skills comparison.
+OECD iLibrary has extensive reports on education, employment, and social policy.
+Free data portal (data-explorer.oecd.org) for statistical queries."
+
+"LinkedIn Workforce Report","Industry Report","Labor Market Analytics","High","https://www.linkedin.com/","Global (focus on major economies)","Monthly workforce reports on hiring rates, talent migration, and skill trends by country and industry.","Free (summaries)","✅ Free (public summaries)","No","N/A","Literature Review, Background, Cross-Country","Exploring","LinkedIn publishes monthly workforce reports covering hiring rates by industry, top growing skills, and talent migration patterns.
+Their 'Skills Graph' data maps relationships between skills and demand trends.
+LinkedIn Talent Insights (paid) offers deeper analytics.
+Free reports useful for cross-country validation."
+
+"Indeed Hiring Lab","Industry Report","Labor Market Analytics","High","https://www.hiringlab.org/","Global (US, UK, Canada, Australia, Germany, France)","Data-driven reports on wage trends, employer demand, and labor market conditions based on millions of job postings.","Free (reports)","✅ Free (public reports)","No","N/A","Literature Review, Background, Cross-Country","Exploring","Indeed's research arm publishes reports based on their global job posting database.
+Topics include: employer demand trends, salary tracking, remote work impact, and skill requirements evolution.
+Free blog posts and PDF reports available."
+
+"Coursera Global Skills Report","Industry Report","Skill Proficiency Rankings","High","https://www.coursera.org/","Global (100+ countries)","Skill proficiency rankings by country across business, technology, and data science domains.","Free (report)","✅ Free (annual report)","No","N/A","Background, Cross-Country","Not Started","Annual report ranking 100+ countries on skill proficiency in technology, data science, and business domains.
+Published annually as a free PDF download.
+Useful for cross-country skill benchmarking and understanding regional strengths and weaknesses."
+
+"BASIS","Industry Report","Bangladesh IT Industry","High","https://basis.org.bd/","Bangladesh","Bangladesh Association of Software and Information Services. Local IT industry data, employment surveys, and skill gap reports.","Free (reports)","✅ Free (public reports)","No","N/A","Background, Bangladesh Context","Not Started","National trade body for Bangladesh's IT industry.
+Publishes member surveys on skill gaps, IT export data, workforce statistics, and industry event reports.
+Useful for researchers focusing on Bangladesh's IT sector.
+Also organizes job fairs — provides insight into local hiring landscape."
+
+"ICT Division Bangladesh","Industry Report","Government ICT Policy","High","https://ictd.gov.bd/","Bangladesh","Government ICT policy documents, national digital strategy, skill development programs, and IT workforce data for Bangladesh.","Free","✅ Free (public reports)","No","N/A","Background, Bangladesh Context","Not Started","Bangladesh government's ICT Division publishes National ICT Policy, Digital Bangladesh strategy, skill development program reports, and IT park data.
+Important for understanding government perspectives on IT skills and employment.
+Also check a2i (a2i.gov.bd) for innovation program reports."
+
+"BBS","Industry Report","National Labor Statistics","High","https://bbs.gov.bd/","Bangladesh","Bangladesh Bureau of Statistics. National labor force surveys, wage surveys, education statistics, and employment data by sector.","Free","✅ Free (public data)","No","N/A","Background, Bangladesh Context","Not Started","Primary source for Bangladesh-specific labor metrics.
+Publishes: Labor Force Survey (annual), Wage Employment Survey, Education Household Survey.
+Useful for researchers working on Bangladesh labor market or education topics.
+Data available in PDF reports and some Excel tables."
+
+"Gartner","Industry Report","IT Market Research","Mid","https://www.gartner.com/","Global IT market","IT market research, technology trend analysis, and industry forecasts. Widely cited in both academic and industry publications.","Free summaries + Paid reports","❌ Mostly paid","Yes (free account for summaries)","University","Background","Not Started","Widely cited in industry and academic publications.
+Gartner Hype Cycle tracks technology maturity cycles.
+Top Skills reports predict future technology demand.
+Detailed reports are behind paywall (~$1K+), but free summaries and press releases contain usable insights."
+
+"BLS","Industry Report","US Labor Statistics","Mid","https://www.bls.gov/","United States","US Bureau of Labor Statistics. Occupational outlook, wage data, employment projections, and the O*NET database.","Free","✅ Free (open government data)","No","N/A","Background, Cross-Country","Not Started","O*NET database (onetonline.org) comes from BLS — provides detailed occupational classifications, skill definitions, and wage data.
+Useful for research involving US labor market or as a reference for occupational taxonomy.
+Data downloadable in bulk."
+
+"UNESCO","Industry Report","Global Education Data","Mid","https://www.unesco.org/","Global (250+ countries)","Global education statistics, ICT in education reports, and technical/vocational education and training (TVET) studies.","Free (reports + data)","✅ Free (open data)","No","N/A","Background, Literature Review, Cross-Country","Not Started","UNESCO Institute for Statistics (UIS) provides education data by country.
+Useful for global education benchmarks and understanding education-to-employment pathways.
+'Global Education Monitoring Report' covers skills and education policy.
+Country-specific reports available."
+

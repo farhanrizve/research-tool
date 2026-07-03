@@ -1,0 +1,63 @@
+%% =============================================================================
+%%  PACKAGES — Shared LaTeX Packages
+%%  Based on thesis patterns from e:\github\thesis
+%%  Adapt/modify for any report/project
+%% =============================================================================
+
+%% ── Citation & Bibliography ──────────────────────────────────────────────────
+\usepackage[authoryear,round]{natbib}
+
+%% ── Page Geometry ────────────────────────────────────────────────────────────
+\usepackage{geometry}
+\geometry{a4paper, tmargin=1in, rmargin=0.8in, bmargin=1in, lmargin=1.2in}
+
+%% ── Graphics ─────────────────────────────────────────────────────────────────
+\usepackage{graphicx}
+\graphicspath{{images/}}
+
+%% ── Fonts ────────────────────────────────────────────────────────────────────
+\usepackage{fontspec}
+\setmainfont{Times New Roman}[Ligatures=TeX]
+\usepackage{unicode-math}
+\setmathfont{Cambria Math}
+
+%% ── Indentation & Spacing ────────────────────────────────────────────────────
+\usepackage{indentfirst}
+\usepackage{setspace}
+\usepackage[skip=2pt]{parskip}
+
+%% ── Math ─────────────────────────────────────────────────────────────────────
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+%% ── Sections & Headings ─────────────────────────────────────────────────────
+\usepackage{titlesec}
+\usepackage{tocloft}
+
+%% ── Tables ───────────────────────────────────────────────────────────────────
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{float}
+
+%% ── URLs & Hyperlinks ───────────────────────────────────────────────────────
+\usepackage[hyphens]{url}
+\Urlmuskip=0mu plus 1mu\relax
+\usepackage[hidelinks]{hyperref}
+
+%% ── Captions ─────────────────────────────────────────────────────────────────
+\usepackage{caption}
+\usepackage{subcaption}
+
+%% ── Enumerations ─────────────────────────────────────────────────────────────
+\usepackage{enumitem}
+
+%% ── Header / Footer ──────────────────────────────────────────────────────────
+\usepackage{fancyhdr}
+
+%% ── Misc ─────────────────────────────────────────────────────────────────────
+\usepackage{anyfontsize}
+\usepackage{rotating}
+\usepackage{pdfpages}
+\usepackage{csquotes}
+% \usepackage{lipsum}   % Uncomment for placeholder text during drafting

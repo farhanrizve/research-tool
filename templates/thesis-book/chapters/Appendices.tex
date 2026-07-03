@@ -1,0 +1,38 @@
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{Appendices}
+
+\chapter{Attaching Codes}
+
+\section{Find the Smallest Among Three Numbers}
+
+\begin{lstlisting}[language=Python]
+# Python program to find the smallest number among the three input numbers
+
+# change the values of num1, num2 and num3
+# for a different result
+num1 = 100
+num2 = 43
+num3 = 79
+
+# uncomment following lines to take three numbers from user
+#num1 = float(input("Enter first number: "))
+#num2 = float(input("Enter second number: "))
+#num3 = float(input("Enter third number: "))
+
+if (num1 <= num2) and (num1 <= num3):
+   smallest = num1
+elif (num2 <= num1) and (num2 <= num3):
+   smallest = num2
+else:
+   smallest = num3
+
+print("The smallest number between",num1,",",num2,"and",num3,"is", smallest)
+\end{lstlisting}
+
+
+\chapter{Name of the Appendix}
+
+\section{Section Name}
+
+Your contents here.....
