@@ -1,0 +1,40 @@
+# research-tools.yaml — Tool configuration for the Research Platform
+#
+# Define custom tools that extend the research pipeline.
+# Tools can be built-in functions or external Python classes.
+#
+# Environment variables can be referenced with ${VAR_NAME} syntax.
+
+tools:
+  # ── Built-in search tools ─────────────────────────────────
+  - name: arxiv_search
+    description: Search arXiv for academic papers
+    function: search_arxiv
+
+  - name: semantic_scholar_search
+    description: Search Semantic Scholar for academic papers
+    function: search_semantic_scholar
+
+  # ── Example: External tool (uncomment to enable) ──────────
+  # - name: pubmed_search
+  #   description: Search PubMed for biomedical literature
+  #   module: research_tool.tools.paper_search
+  #   class: PubMedSearch
+  #   config:
+  #     api_key: ${PUBMED_API_KEY}
+  #     base_url: https://eutils.ncbi.nlm.nih.gov/entrez/eutils
+
+  # - name: zotero_sync
+  #   description: Sync citations with Zotero library
+  #   module: research_tool.tools.citation
+  #   class: ZoteroSync
+  #   config:
+  #     library_id: ${ZOTERO_LIBRARY_ID}
+  #     api_key: ${ZOTERO_API_KEY}
+
+  # - name: connected_papers
+  #   description: Find related papers via Connected Papers
+  #   module: research_tool.tools.paper_search
+  #   class: ConnectedPapers
+  #   config:
+  #     api_key: ${CONNECTED_PAPERS_API_KEY}
