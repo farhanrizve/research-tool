@@ -5,7 +5,7 @@
   "private": true,
   "dependencies": {
     "@playwright/test": "^1.60.0",
-    "docx": "^9.6.1",
+    "docx": "^9.7.1",
     "markdown-it": "^14.0.0",
     "playwright-core": "^1.60.0",
     "pptxgenjs": "^4.0.1"
