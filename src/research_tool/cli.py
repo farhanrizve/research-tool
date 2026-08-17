@@ -385,26 +385,52 @@ def kb_clear(
 # ── research serve ───────────────────────────────────────────
 @app.command("serve")
 def serve(
-    transport: str = typer.Option("stdio", "--transport", "-t", help="Transport: stdio or sse"),
-    port: int = typer.Option(8000, "--port", "-p", help="Port for SSE transport"),
+    mode: str = typer.Option("stdio", "--mode", "-m", help="Server mode: stdio, sse, web"),
+    port: int = typer.Option(8000, "--port", "-p", help="Port for SSE/Web mode"),
+    host: str = typer.Option("0.0.0.0", "--host", help="Host for Web mode"),
+    project_dir: Path = typer.Option(".", "--dir", "-D", help="Project directory"),
 ) -> None:
-    """🚀 Start the MCP server for AI agent integration."""
-    from research_tool.server import main as server_main, mcp
+    """🚀 Start the MCP server or web app for AI agent integration."""
+    if mode == "web":
+        try:
+            import uvicorn
+        except ImportError:
+            console.print(
+                "[red]Web mode requires the 'web' extra. Install with:\n"
+                "  pip install research-tool[web][/]"
+            )
+            raise typer.Exit(1)
 
-    console.print(Panel(
-        "[bold cyan]Starting MCP Research Server[/]\n\n"
-        f"Transport: [green]{transport}[/]\n"
-        + (f"Port: [green]{port}[/]\n" if transport == "sse" else "")
-        + "\n[dim]Other AI agents can now use this tool via MCP protocol.[/]\n"
-        "[dim]Press Ctrl+C to stop.[/]",
-        title="🔌 MCP Server",
-        border_style="cyan",
-    ))
+        console.print(Panel(
+            f"[bold green]Starting Research Tool Web Server[/]\n\n"
+            f"URL: [cyan]http://{host}:{port}[/]\n"
+            f"API docs: [cyan]http://{host}:{port}/docs[/]\n"
+            f"Project: [dim]{project_dir}[/]\n\n"
+            "[dim]Press Ctrl+C to stop.[/]",
+            title="🌐 Web Server",
+            border_style="green",
+        ))
 
-    if transport == "sse":
-        mcp.run(transport="sse", port=port)
+        from research_tool.api.app import create_app
+        app_instance = create_app(project_dir=str(project_dir))
+        uvicorn.run(app_instance, host=host, port=port)
     else:
-        mcp.run(transport="stdio")
+        from research_tool.server import main as server_main, mcp
+
+        console.print(Panel(
+            "[bold cyan]Starting MCP Research Server[/]\n\n"
+            f"Transport: [green]{mode}[/]\n"
+            + (f"Port: [green]{port}[/]\n" if mode == "sse" else "")
+            + "\n[dim]Other AI agents can now use this tool via MCP protocol.[/]\n"
+            "[dim]Press Ctrl+C to stop.[/]",
+            title="🔌 MCP Server",
+            border_style="cyan",
+        ))
+
+        if mode == "sse":
+            mcp.run(transport="sse", port=port)
+        else:
+            mcp.run(transport="stdio")
 
 
 # ── Version ───────────────────────────────────────────────────
