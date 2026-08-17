@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 from typing import Optional
 
+import platformdirs
 from pydantic import Field
 from pydantic_settings import BaseSettings
 

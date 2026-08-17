@@ -21,6 +21,8 @@ from research_tool.agents.discovery import DiscoveryAgent
 from research_tool.agents.analysis import AnalysisAgent
 from research_tool.agents.synthesis import SynthesisAgent
 from research_tool.agents.writing import WritingAgent
+from research_tool.agents.prompts import ORCHESTRATOR_PLAN
+from research_tool.agents.base import _cache_key, _llm_cache, CACHE_TTL
 from research_tool.core.config import Settings, get_settings
 from research_tool.memory.session import ResearchSession
 from research_tool.memory.knowledge import KnowledgeBase
@@ -247,9 +249,19 @@ class Orchestrator:
         return plan
 
     def _generate_sub_questions(self, query: str, count: int) -> list[str]:
-        """Use LLM to break down a query into sub-questions."""
-        # For now, return placeholder sub-questions
-        # TODO: Integrate with LiteLLM for actual generation
+        """Use LLM to break down a query into sub-questions.
+
+        Falls back to template-based questions if LLM is unavailable.
+        """
+        try:
+            result = self._llm_json(query, count=count)
+            questions = result.get("sub_questions", [])
+            if questions and len(questions) >= 2:
+                return questions[:count]
+        except Exception as e:
+            print(f"  [orchestrator] LLM sub-question generation failed: {e}")
+
+        # Fallback: template-based sub-questions
         return [
             f"What is the current state of research on: {query}?",
             f"What are the main challenges in: {query}?",
@@ -260,6 +272,46 @@ class Orchestrator:
             f"What are the ethical considerations of: {query}?",
             f"How does {query} compare across different domains?",
         ][:count]
+
+    def _llm_json(self, query: str, count: int = 5) -> dict[str, Any]:
+        """LLM call for plan generation using litellm directly."""
+        import json
+        import time
+        import litellm
+
+        system = "You are a research planning assistant. Return ONLY valid JSON."
+        user = ORCHESTRATOR_PLAN.format(
+            query=query,
+            depth="standard",
+            sources=", ".join(self.config.default_sources),
+            estimated_papers=25,
+        )
+
+        messages = [
+            {"role": "system", "content": system},
+            {"role": "user", "content": user},
+        ]
+
+        # Check cache
+        key = _cache_key(self.config.llm_model, messages)
+        if key in _llm_cache:
+            cached, ts = _llm_cache[key]
+            if time.time() - ts < CACHE_TTL:
+                return json.loads(cached) if isinstance(cached, str) else cached
+
+        response = litellm.completion(
+            model=self.config.llm_model,
+            messages=messages,
+            temperature=0.3,
+            max_tokens=1024,
+            response_format={"type": "json_object"},
+        )
+        text = response.choices[0].message.content or "{}"
+
+        # Cache the result
+        _llm_cache[key] = (text, time.time())
+
+        return json.loads(text)
 
     def search_knowledge(self, query: str, k: int = 10) -> list[dict[str, Any]]:
         """Search the knowledge base for relevant indexed content."""

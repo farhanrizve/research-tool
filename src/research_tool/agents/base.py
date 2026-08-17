@@ -2,11 +2,25 @@
 
 from __future__ import annotations
 
+import asyncio
+import json
+import hashlib
+import time
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import Any, Optional
 
 from research_tool.core.config import Settings, get_settings
+
+# ── LLM response cache (module-level, survives across agent calls) ──────────
+_llm_cache: dict[str, tuple[str, float]] = {}
+CACHE_TTL = 3600  # 1 hour
+
+
+def _cache_key(model: str, messages: list[dict], **kwargs: Any) -> str:
+    """Generate a deterministic cache key from LLM call parameters."""
+    raw = json.dumps({"model": model, "messages": messages, **kwargs}, sort_keys=True)
+    return hashlib.sha256(raw.encode()).hexdigest()[:24]
 
 
 @dataclass
@@ -21,7 +35,7 @@ class AgentResult:
 class BaseAgent(ABC):
     """Abstract base class for all research agents.
 
-    Provides common infrastructure (config, LLM access, logging)
+    Provides common infrastructure (config, LLM access, caching, logging)
     and enforces a consistent interface.
     """
 
@@ -36,27 +50,114 @@ class BaseAgent(ABC):
         """Execute the agent's task. Must be implemented by subclasses."""
         ...
 
-    def _llm_call(self, prompt: str, system: str | None = None, **kwargs: Any) -> str:
-        """Make an LLM call using LiteLLM.
+    # ── LLM integration ───────────────────────────────────────────────────
 
-        This is a convenience wrapper that all agents can use.
+    async def _llm(
+        self,
+        prompt: str,
+        system: str | None = None,
+        *,
+        temperature: float = 0.3,
+        max_tokens: int = 4096,
+        json_mode: bool = False,
+        use_cache: bool = True,
+        retries: int = 2,
+    ) -> str:
+        """Async LLM call with caching and retry.
+
+        Args:
+            prompt: User prompt.
+            system: Optional system prompt.
+            temperature: Sampling temperature.
+            max_tokens: Max tokens in response.
+            json_mode: Request JSON output (sets response_format).
+            use_cache: Whether to use the response cache.
+            retries: Number of retries on failure.
+
+        Returns:
+            The model's text response.
         """
+        import litellm
+
+        messages: list[dict[str, str]] = []
+        if system:
+            messages.append({"role": "system", "content": system})
+        messages.append({"role": "user", "content": prompt})
+
+        kwargs: dict[str, Any] = {
+            "model": self.config.llm_model,
+            "messages": messages,
+            "temperature": temperature,
+            "max_tokens": max_tokens,
+        }
+        if json_mode:
+            kwargs["response_format"] = {"type": "json_object"}
+
+        # Check cache
+        key = _cache_key(self.config.llm_model, messages, temperature=temperature, json_mode=json_mode)
+        if use_cache and key in _llm_cache:
+            cached, ts = _llm_cache[key]
+            if time.time() - ts < CACHE_TTL:
+                self._log(f"(cache hit, {len(cached)} chars)")
+                return cached
+
+        # Retry loop
+        last_error: Exception | None = None
+        for attempt in range(retries + 1):
+            try:
+                response = await litellm.acompletion(**kwargs)
+                text = response.choices[0].message.content or ""
+                if use_cache:
+                    _llm_cache[key] = (text, time.time())
+                return text
+            except Exception as e:
+                last_error = e
+                if attempt < retries:
+                    wait = 2 ** attempt
+                    self._log(f"LLM call failed (attempt {attempt + 1}): {e} — retrying in {wait}s")
+                    await asyncio.sleep(wait)
+
+        # All retries exhausted
+        self._log(f"LLM call failed after {retries + 1} attempts: {last_error}")
+        return f"[LLM call failed: {last_error}]"
+
+    async def _llm_json(
+        self,
+        prompt: str,
+        system: str | None = None,
+        **kwargs: Any,
+    ) -> dict[str, Any]:
+        """LLM call that returns parsed JSON.
+
+        Attempts json_mode first; falls back to extracting JSON from the response text.
+        """
+        # Try with json_mode
+        raw = await self._llm(prompt, system, json_mode=True, **kwargs)
+        return self._parse_json(raw)
+
+    @staticmethod
+    def _parse_json(text: str) -> dict[str, Any]:
+        """Extract and parse JSON from LLM output, handling markdown fences."""
+        text = text.strip()
+        # Strip markdown code fences
+        if text.startswith("```"):
+            lines = text.split("\n")
+            # Remove first line (```json or ```) and last line (```)
+            lines = [l for l in lines[1:] if not l.strip().startswith("```")]
+            text = "\n".join(lines).strip()
         try:
-            import litellm
-
-            messages = []
-            if system:
-                messages.append({"role": "system", "content": system})
-            messages.append({"role": "user", "content": prompt})
-
-            response = litellm.completion(
-                model=self.config.llm_model,
-                messages=messages,
-                **kwargs,
-            )
-            return response.choices[0].message.content or ""
-        except Exception as e:
-            return f"[LLM call failed: {e}]"
+            return json.loads(text)
+        except json.JSONDecodeError:
+            # Try to find JSON object/array in the text
+            for start_char, end_char in [("{", "}"), ("[", "]")]:
+                start = text.find(start_char)
+                end = text.rfind(end_char)
+                if start != -1 and end > start:
+                    try:
+                        return json.loads(text[start:end + 1])
+                    except json.JSONDecodeError:
+                        continue
+            return {"_raw": text, "_parse_error": True}
 
     def _log(self, message: str) -> None:
         """Log an agent message."""
