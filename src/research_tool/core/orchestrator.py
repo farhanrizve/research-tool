@@ -4,8 +4,10 @@ The Orchestrator is the central coordinator that:
 1. Parses research intent from the user
 2. Plans execution steps (which agents, in what order)
 3. Manages human checkpoints
-4. Coordinates specialist agents
-5. Assembles the final report
+4. Coordinates specialist agents — with parallel execution
+5. Indexes findings into the knowledge base (RAG)
+6. Persists session state for resume capability
+7. Assembles the final report
 """
 
 from __future__ import annotations
@@ -20,7 +22,9 @@ from research_tool.agents.analysis import AnalysisAgent
 from research_tool.agents.synthesis import SynthesisAgent
 from research_tool.agents.writing import WritingAgent
 from research_tool.core.config import Settings, get_settings
-from research_tool.ui.interactive import checkpoint
+from research_tool.memory.session import ResearchSession
+from research_tool.memory.knowledge import KnowledgeBase
+from research_tool.ui.interactive import checkpoint, checkpoint_with_options
 from research_tool.ui.progress import spinner
 
 
@@ -28,6 +32,7 @@ from research_tool.ui.progress import spinner
 class ResearchResult:
     """Final output of a research run."""
     report_path: Optional[Path] = None
+    session: Optional[ResearchSession] = None
     papers_count: int = 0
     citations_count: int = 0
     findings: list[dict[str, Any]] = field(default_factory=list)
@@ -48,16 +53,18 @@ class ResearchPlan:
 class Orchestrator:
     """Central coordinator for the research pipeline.
 
-    Manages the flow: Query → Plan → Discovery → Analysis → Synthesis → Writing
-    with human checkpoints at key decision points.
+    Manages the flow: Query → Plan → [Parallel Discovery] → Analysis → Synthesis → Writing
+    with human checkpoints at key decision points and session persistence.
     """
 
-    def __init__(self, config: Optional[Settings] = None):
+    def __init__(self, config: Optional[Settings] = None, project_dir: Optional[Path] = None):
         self.config = config or get_settings()
+        self.project_dir = project_dir or Path(".")
         self.discovery = DiscoveryAgent(self.config)
         self.analysis = AnalysisAgent(self.config)
         self.synthesis = SynthesisAgent(self.config)
         self.writing = WritingAgent(self.config)
+        self.knowledge = KnowledgeBase(self.project_dir)
 
     def run(
         self,
@@ -65,16 +72,39 @@ class Orchestrator:
         depth: str = "standard",
         sources: list[str] | None = None,
         output_format: str = "markdown",
+        resume: bool = False,
     ) -> ResearchResult | None:
         """Execute the full research pipeline.
 
-        Returns ResearchResult on success, None if cancelled.
+        Supports resume from a saved session. Returns ResearchResult on success, None if cancelled.
         """
         sources = sources or self.config.default_sources
 
+        # Step 0: Create or resume session
+        session_file = self.project_dir / "session.json"
+        if resume and session_file.exists():
+            session = ResearchSession.load(self.project_dir)
+            print(f"  Resuming session {session.id} (status: {session.status})")
+        else:
+            session = ResearchSession.create(
+                query=query,
+                project_dir=str(self.project_dir),
+                depth=depth,
+                sources=sources,
+            )
+
         # Step 1: Create research plan
+        session.update_status("planning")
         with spinner("📋 Creating research plan..."):
             plan = self._create_plan(query, depth, sources)
+        session.plan = {
+            "query": plan.query,
+            "depth": plan.depth,
+            "sources": plan.sources,
+            "sub_questions": plan.sub_questions,
+            "estimated_papers": plan.estimated_papers,
+        }
+        session.save()
 
         # Step 2: Human checkpoint — approve plan
         if not self.config.auto_approve:
@@ -83,24 +113,43 @@ class Orchestrator:
                 "📋 Research Plan",
                 self._format_plan(plan),
             )
+            session.add_checkpoint("plan_approval", "Approve research plan?", approved)
             if not approved:
+                session.update_status("failed", error="Plan not approved")
                 return None
 
-        # Step 3: Discovery — find relevant papers
-        with spinner("🔍 Searching for papers..."):
-            papers = asyncio.get_event_loop().run_until_complete(
-                self.discovery.search(plan)
+        # Step 3: Discovery — search in parallel across sub-questions
+        session.update_status("discovering")
+        with spinner("🔍 Searching for papers (parallel)..."):
+            papers = self._parallel_discover(plan)
+
+        # Index found papers into knowledge base
+        indexed_count = 0
+        for paper in papers:
+            self.knowledge.index_paper(
+                title=paper.get("title", ""),
+                abstract=paper.get("abstract", ""),
+                authors=paper.get("authors", []),
+                year=paper.get("year"),
+                doi=paper.get("doi", ""),
+                url=paper.get("url", ""),
+                source=paper.get("source", ""),
             )
+            indexed_count += 1
+
+        session.add_findings(papers)
+        session.update_status("analyzing")
 
         # Step 4: Analysis — extract claims and findings
         with spinner("🔬 Analyzing papers..."):
-            findings = asyncio.get_event_loop().run_until_complete(
+            findings = self._run_async(
                 self.analysis.analyze(papers, plan)
             )
 
         # Step 5: Synthesis — combine findings
+        session.update_status("synthesizing")
         with spinner("🧩 Synthesizing findings..."):
-            synthesis = asyncio.get_event_loop().run_until_complete(
+            synthesis = self._run_async(
                 self.synthesis.synthesize(findings, plan)
             )
 
@@ -111,22 +160,62 @@ class Orchestrator:
                 "🧩 Synthesis Review",
                 self._format_synthesis(synthesis),
             )
+            session.add_checkpoint("review_synthesis", "Approve synthesis?", approved)
             if not approved:
+                session.update_status("failed", error="Synthesis not approved")
                 return None
 
         # Step 7: Writing — generate report
+        session.update_status("writing")
         with spinner("📝 Generating report..."):
-            report_path = asyncio.get_event_loop().run_until_complete(
+            report_path = self._run_async(
                 self.writing.generate(synthesis, plan, output_format)
             )
 
+        session.report_path = str(report_path) if report_path else None
+        session.update_status("done")
+        session.save()
+
         return ResearchResult(
             report_path=report_path,
+            session=session,
             papers_count=len(papers),
             citations_count=len([p for p in papers if p.get("doi")]),
             findings=findings,
             sections=synthesis.get("sections", []),
         )
+
+    def _parallel_discover(self, plan: ResearchPlan) -> list[dict[str, Any]]:
+        """Run discovery in parallel across all sub-questions.
+
+        Uses asyncio.gather for concurrent searches, then deduplicates.
+        """
+        async def _search_all():
+            tasks = [self.discovery.search_single(q, plan) for q in plan.sub_questions]
+            results = await asyncio.gather(*tasks, return_exceptions=True)
+            all_papers = []
+            for result in results:
+                if isinstance(result, list):
+                    all_papers.extend(result)
+                elif isinstance(result, Exception):
+                    print(f"  [warn] Sub-query failed: {result}")
+            return all_papers
+
+        return self._run_async(_search_all())
+
+    def _run_async(self, coro):
+        """Run an async coroutine from sync context."""
+        try:
+            loop = asyncio.get_event_loop()
+            if loop.is_running():
+                # Already in an event loop (e.g., Jupyter) — use nest_asyncio pattern
+                import concurrent.futures
+                with concurrent.futures.ThreadPoolExecutor() as pool:
+                    return pool.submit(asyncio.run, coro).result()
+            else:
+                return loop.run_until_complete(coro)
+        except RuntimeError:
+            return asyncio.run(coro)
 
     def _create_plan(self, query: str, depth: str, sources: list[str]) -> ResearchPlan:
         """Create a structured research plan."""
@@ -137,7 +226,6 @@ class Orchestrator:
         }
         cfg = depth_config.get(depth, depth_config["standard"])
 
-        # Generate sub-questions using LLM
         sub_questions = self._generate_sub_questions(query, cfg["sub_questions"])
 
         plan = ResearchPlan(
@@ -147,8 +235,8 @@ class Orchestrator:
             sub_questions=sub_questions,
             estimated_papers=cfg["papers"],
             steps=[
-                "Search academic databases",
-                "Download and parse papers",
+                "Search academic databases (parallel)",
+                "Index papers into knowledge base",
                 "Extract key claims and findings",
                 "Cross-reference across papers",
                 "Synthesize themes and patterns",
@@ -166,7 +254,16 @@ class Orchestrator:
             f"What is the current state of research on: {query}?",
             f"What are the main challenges in: {query}?",
             f"What are the latest breakthroughs in: {query}?",
+            f"What methodologies are used in: {query}?",
+            f"What are the future directions of: {query}?",
+            f"What are the practical applications of: {query}?",
+            f"What are the ethical considerations of: {query}?",
+            f"How does {query} compare across different domains?",
         ][:count]
+
+    def search_knowledge(self, query: str, k: int = 10) -> list[dict[str, Any]]:
+        """Search the knowledge base for relevant indexed content."""
+        return self.knowledge.search(query, k=k)
 
     def _format_plan(self, plan: ResearchPlan) -> str:
         """Format a research plan for display."""

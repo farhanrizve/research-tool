@@ -33,11 +33,15 @@ lit_app = typer.Typer(help="📚 Literature management")
 cite_app = typer.Typer(help="📖 Citation management")
 extract_app = typer.Typer(help="📄 Data extraction from papers")
 report_app = typer.Typer(help="📝 Report generation")
+session_app = typer.Typer(help="💾 Session management")
+kb_app = typer.Typer(help="🗄️  Knowledge base management")
 
 app.add_typer(lit_app, name="lit")
 app.add_typer(cite_app, name="cite")
 app.add_typer(extract_app, name="extract")
 app.add_typer(report_app, name="report")
+app.add_typer(session_app, name="session")
+app.add_typer(kb_app, name="kb")
 
 
 # ── research run ──────────────────────────────────────────────
@@ -70,7 +74,7 @@ def run(
         border_style="cyan",
     ))
 
-    orchestrator = Orchestrator(config)
+    orchestrator = Orchestrator(config, project_dir=project_dir)
     result = orchestrator.run(query, depth=depth, sources=source_list, output_format=output)
 
     if result:
@@ -208,6 +212,174 @@ def report_generate(
 ) -> None:
     """📝 Generate a research report."""
     console.print(f"[cyan]Generating {template} report with {chapters} chapters...[/]")
+
+
+# ── research session list ────────────────────────────────────
+@session_app.command("list")
+def session_list(
+    project_dir: Path = typer.Option(".", "--dir", "-D", help="Project directory"),
+) -> None:
+    """📋 List research sessions."""
+    from research_tool.memory.session import ResearchSession
+    from research_tool.core.project import list_projects
+
+    projects = list_projects(project_dir)
+    if not projects:
+        console.print("[yellow]No projects found. Use 'research init' to create one.[/]")
+        return
+
+    console.print("\n[bold cyan]Research Sessions:[/]\n")
+    for p in projects:
+        proj_path = Path(p.get("path", "."))
+        session_file = proj_path / "session.json"
+        if session_file.exists():
+            session = ResearchSession.load(proj_path)
+            status_icon = {
+                "created": "🆕", "planning": "📋", "discovering": "🔍",
+                "analyzing": "🔬", "synthesizing": "🧩", "writing": "📝",
+                "done": "✅", "failed": "❌",
+            }.get(session.status, "❓")
+            console.print(
+                f"  {status_icon} [bold]{session.id}[/] — {session.query}\n"
+                f"     Status: [cyan]{session.status}[/] | Papers: {len(session.findings)} | {session.elapsed_time}\n"
+            )
+        else:
+            console.print(f"  📁 [bold]{p.get('topic', 'Unknown')}[/] — no session data\n")
+
+
+# ── research session resume ──────────────────────────────────
+@session_app.command("resume")
+def session_resume(
+    project_dir: Path = typer.Option(".", "--dir", "-D", help="Project directory"),
+) -> None:
+    """▶️  Resume a previous research session."""
+    from research_tool.memory.session import ResearchSession
+    from research_tool.core.config import load_project_config
+    from research_tool.core.orchestrator import Orchestrator
+
+    session_file = Path(project_dir) / "session.json"
+    if not session_file.exists():
+        console.print("[yellow]No session found to resume.[/]")
+        raise typer.Exit(1)
+
+    session = ResearchSession.load(Path(project_dir))
+    console.print(f"[cyan]Resuming session:[/] {session.id} — {session.query}")
+
+    config = load_project_config(project_dir)
+    orchestrator = Orchestrator(config, project_dir=project_dir)
+    result = orchestrator.run(session.query, depth=session.depth, sources=session.sources, resume=True)
+
+    if result:
+        console.print(f"[green]✅ Session resumed and completed![/]")
+    else:
+        console.print("[yellow]Session could not be completed.[/]")
+
+
+# ── research session status ──────────────────────────────────
+@session_app.command("status")
+def session_status(
+    project_dir: Path = typer.Option(".", "--dir", "-D", help="Project directory"),
+) -> None:
+    """📊 Show detailed status of the current session."""
+    from research_tool.memory.session import ResearchSession
+
+    session_file = Path(project_dir) / "session.json"
+    if not session_file.exists():
+        console.print("[yellow]No active session.[/]")
+        raise typer.Exit(1)
+
+    session = ResearchSession.load(Path(project_dir))
+    status_icon = {
+        "created": "🆕", "planning": "📋", "discovering": "🔍",
+        "analyzing": "🔬", "synthesizing": "🧩", "writing": "📝",
+        "done": "✅", "failed": "❌",
+    }.get(session.status, "❓")
+
+    console.print(Panel(
+        f"[bold]Session ID:[/] {session.id}\n"
+        f"[bold]Query:[/] {session.query}\n"
+        f"[bold]Status:[/] {status_icon} {session.status}\n"
+        f"[bold]Depth:[/] {session.depth}\n"
+        f"[bold]Sources:[/] {', '.join(session.sources)}\n"
+        f"[bold]Papers found:[/] {len(session.findings)}\n"
+        f"[bold]Checkpoints:[/] {len(session.checkpoints)}\n"
+        f"[bold]Elapsed:[/] {session.elapsed_time}\n"
+        f"[bold]Created:[/] {session.created_at}\n"
+        f"[bold]Updated:[/] {session.updated_at}"
+        + (f"\n[bold red]Error:[/] {session.error}" if session.error else ""),
+        title=f"📊 Session Status — {status_icon} {session.status.upper()}",
+        border_style="cyan" if session.status != "failed" else "red",
+    ))
+
+
+# ── research kb search ───────────────────────────────────────
+@kb_app.command("search")
+def kb_search(
+    query: str = typer.Argument(..., help="Search query"),
+    k: int = typer.Option(5, "--limit", "-k", help="Number of results"),
+    project_dir: Path = typer.Option(".", "--dir", "-D", help="Project directory"),
+) -> None:
+    """🔍 Search the knowledge base."""
+    from research_tool.memory.knowledge import KnowledgeBase
+
+    kb = KnowledgeBase(project_dir)
+    results = kb.search(query, k=k)
+
+    if not results:
+        console.print("[yellow]No results in knowledge base.[/]")
+        return
+
+    console.print(f"\n[bold cyan]Found {len(results)} results:[/]\n")
+    for i, result in enumerate(results, 1):
+        meta = result.get("metadata", {})
+        console.print(
+            f"  [bold]{i}.[/] {meta.get('title', 'Unknown')}\n"
+            f"     [dim]{result.get('text', '')[:200]}...[/]\n"
+            f"     [dim]Distance: {result.get('distance', '?'):.4f}[/]\n"
+        )
+
+
+# ── research kb stats ────────────────────────────────────────
+@kb_app.command("stats")
+def kb_stats(
+    project_dir: Path = typer.Option(".", "--dir", "-D", help="Project directory"),
+) -> None:
+    """📊 Show knowledge base statistics."""
+    from research_tool.memory.knowledge import KnowledgeBase
+
+    kb = KnowledgeBase(project_dir)
+    paper_count = kb.get_paper_count()
+    papers = kb.get_unique_papers()
+
+    console.print(Panel(
+        f"[bold]Total chunks:[/] {paper_count}\n"
+        f"[bold]Unique papers:[/] {len(papers)}\n"
+        + ("\n[bold]Papers:[/]\n" + "\n".join(
+            f"  • {p['title']} ({p.get('year', '?')})" for p in papers[:10]
+        ) if papers else "[dim]No papers indexed yet.[/]"),
+        title="🗄️  Knowledge Base Stats",
+        border_style="cyan",
+    ))
+
+
+# ── research kb clear ────────────────────────────────────────
+@kb_app.command("clear")
+def kb_clear(
+    project_dir: Path = typer.Option(".", "--dir", "-D", help="Project directory"),
+    confirm: bool = typer.Option(False, "--yes", "-y", help="Skip confirmation"),
+) -> None:
+    """🗑️  Clear the knowledge base."""
+    from research_tool.memory.knowledge import KnowledgeBase
+
+    if not confirm:
+        confirmed = typer.confirm("Are you sure you want to clear the knowledge base?")
+        if not confirmed:
+            console.print("[yellow]Cancelled.[/]")
+            return
+
+    kb = KnowledgeBase(project_dir)
+    kb.clear()
+    console.print("[green]✅ Knowledge base cleared.[/]")
 
 
 # ── Version ───────────────────────────────────────────────────
