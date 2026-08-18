@@ -65,6 +65,9 @@ class BaseAgent(ABC):
     ) -> str:
         """Async LLM call with caching and retry.
 
+        Uses OpenCode Zen free models when zen_api_key is configured,
+        otherwise falls back to the configured llm_model.
+
         Args:
             prompt: User prompt.
             system: Optional system prompt.
@@ -84,38 +87,80 @@ class BaseAgent(ABC):
             messages.append({"role": "system", "content": system})
         messages.append({"role": "user", "content": prompt})
 
-        kwargs: dict[str, Any] = {
-            "model": self.config.llm_model,
-            "messages": messages,
-            "temperature": temperature,
-            "max_tokens": max_tokens,
-        }
+        # ── Zen free model selection ──────────────────────────────────────
+        use_zen = bool(self.config.zen_api_key) and self.config.zen_free_only
+        if use_zen:
+            from research_tool.core.zen_provider import get_zen_provider
+            zen = get_zen_provider(
+                api_key=self.config.zen_api_key,
+                base_url=self.config.zen_base_url,
+                cache_ttl=self.config.zen_model_cache_ttl,
+                preferred_model=self.config.zen_preferred_model,
+            )
+            litellm_kwargs = zen.get_litellm_kwargs()
+            model_name = litellm_kwargs.pop("model")
+            kwargs: dict[str, Any] = {
+                "model": model_name,
+                "messages": messages,
+                "temperature": temperature,
+                "max_tokens": max_tokens,
+                **litellm_kwargs,
+            }
+        else:
+            kwargs = {
+                "model": self.config.llm_model,
+                "messages": messages,
+                "temperature": temperature,
+                "max_tokens": max_tokens,
+            }
+            model_name = self.config.llm_model
+
         if json_mode:
             kwargs["response_format"] = {"type": "json_object"}
 
         # Check cache
-        key = _cache_key(self.config.llm_model, messages, temperature=temperature, json_mode=json_mode)
+        key = _cache_key(model_name, messages, temperature=temperature, json_mode=json_mode)
         if use_cache and key in _llm_cache:
             cached, ts = _llm_cache[key]
             if time.time() - ts < CACHE_TTL:
                 self._log(f"(cache hit, {len(cached)} chars)")
                 return cached
 
-        # Retry loop
+        # Retry loop — on Zen, also try fallback models
         last_error: Exception | None = None
-        for attempt in range(retries + 1):
-            try:
-                response = await litellm.acompletion(**kwargs)
-                text = response.choices[0].message.content or ""
-                if use_cache:
-                    _llm_cache[key] = (text, time.time())
-                return text
-            except Exception as e:
-                last_error = e
-                if attempt < retries:
-                    wait = 2 ** attempt
-                    self._log(f"LLM call failed (attempt {attempt + 1}): {e} — retrying in {wait}s")
-                    await asyncio.sleep(wait)
+        fallback_models: list[str] = []
+        if use_zen:
+            from research_tool.core.zen_provider import get_zen_provider, PREFERRED_ORDER
+            zen = get_zen_provider(
+                api_key=self.config.zen_api_key,
+                base_url=self.config.zen_base_url,
+                cache_ttl=self.config.zen_model_cache_ttl,
+            )
+            current = zen.get_model()
+            fallback_models = [m for m in PREFERRED_ORDER if m != current]
+
+        all_models = [model_name] + [f"openai/{m}" for m in fallback_models[:3]]
+
+        for model_attempt in all_models:
+            current_kwargs = dict(kwargs)
+            current_kwargs["model"] = model_attempt
+            for attempt in range(retries + 1):
+                try:
+                    response = await litellm.acompletion(**current_kwargs)
+                    text = response.choices[0].message.content or ""
+                    if use_cache:
+                        _llm_cache[key] = (text, time.time())
+                    return text
+                except Exception as e:
+                    last_error = e
+                    if attempt < retries:
+                        wait = 2 ** attempt
+                        self._log(f"LLM call failed (attempt {attempt + 1}): {e} — retrying in {wait}s")
+                        await asyncio.sleep(wait)
+
+            # Move to next fallback model
+            if use_zen and model_attempt != all_models[-1]:
+                self._log(f"Trying fallback model: {model_attempt}")
 
         # All retries exhausted
         self._log(f"LLM call failed after {retries + 1} attempts: {last_error}")

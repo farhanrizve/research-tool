@@ -55,6 +55,7 @@ def run(
     output: str = typer.Option("markdown", "--output", "-o", help="Output format: markdown,pdf,docx"),
     project_dir: Path = typer.Option(".", "--dir", "-D", help="Project directory"),
     auto: bool = typer.Option(False, "--auto", help="Skip human checkpoints"),
+    zen_key: Optional[str] = typer.Option(None, "--zen-key", help="OpenCode Zen API key (enables free models)"),
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Verbose output"),
 ) -> None:
     """🔍 Conduct AI-powered research on any topic."""
@@ -64,12 +65,24 @@ def run(
     config = load_project_config(project_dir)
     config.auto_approve = auto
 
+    # Override Zen API key from CLI flag
+    if zen_key:
+        config.zen_api_key = zen_key
+
     source_list = [s.strip() for s in sources.split(",")]
+
+    # Show Zen status
+    zen_info = ""
+    if config.zen_api_key:
+        zen_info = f"\n[bold green]Zen:[/] ✅ Free models enabled"
+    else:
+        zen_info = f"\n[bold yellow]Zen:[/] ⚠️  No API key — using fallback (set --zen-key or RESEARCH_ZEN_API_KEY)"
 
     console.print(Panel(
         f"[bold cyan]Research Query:[/] {query}\n"
         f"[bold cyan]Depth:[/] {depth}  |  [bold cyan]Sources:[/] {', '.join(source_list)}\n"
-        f"[bold cyan]Output:[/] {output}  |  [bold cyan]Auto:[/] {auto}",
+        f"[bold cyan]Output:[/] {output}  |  [bold cyan]Auto:[/] {auto}"
+        f"{zen_info}",
         title="🧠 Starting Research",
         border_style="cyan",
     ))

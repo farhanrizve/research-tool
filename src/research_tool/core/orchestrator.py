@@ -286,7 +286,10 @@ class Orchestrator:
         ][:count]
 
     def _llm_json(self, query: str, count: int = 5) -> dict[str, Any]:
-        """LLM call for plan generation using litellm directly."""
+        """LLM call for plan generation using litellm directly.
+
+        Uses OpenCode Zen free models when zen_api_key is configured.
+        """
         import json
         import time
         import litellm
@@ -304,19 +307,36 @@ class Orchestrator:
             {"role": "user", "content": user},
         ]
 
+        # ── Zen free model selection ──────────────────────────────────────
+        use_zen = bool(self.config.zen_api_key) and self.config.zen_free_only
+        if use_zen:
+            from research_tool.core.zen_provider import get_zen_provider
+            zen = get_zen_provider(
+                api_key=self.config.zen_api_key,
+                base_url=self.config.zen_base_url,
+                cache_ttl=self.config.zen_model_cache_ttl,
+                preferred_model=self.config.zen_preferred_model,
+            )
+            litellm_kwargs = zen.get_litellm_kwargs()
+            model_name = litellm_kwargs.pop("model")
+        else:
+            model_name = self.config.llm_model
+            litellm_kwargs = {}
+
         # Check cache
-        key = _cache_key(self.config.llm_model, messages)
+        key = _cache_key(model_name, messages)
         if key in _llm_cache:
             cached, ts = _llm_cache[key]
             if time.time() - ts < CACHE_TTL:
                 return json.loads(cached) if isinstance(cached, str) else cached
 
         response = litellm.completion(
-            model=self.config.llm_model,
+            model=model_name,
             messages=messages,
             temperature=0.3,
             max_tokens=1024,
             response_format={"type": "json_object"},
+            **litellm_kwargs,
         )
         text = response.choices[0].message.content or "{}"
 

@@ -22,10 +22,17 @@ class Settings(BaseSettings):
     )
 
     # LLM
-    llm_provider: str = Field(default="openai", description="LLM provider (openai, anthropic, ollama)")
+    llm_provider: str = Field(default="openai", description="LLM provider (openai, anthropic, ollama, zen)")
     llm_model: str = Field(default="gpt-4o-mini", description="Default LLM model")
     llm_api_key: Optional[str] = Field(default=None, description="LLM API key")
     llm_base_url: Optional[str] = Field(default=None, description="Custom LLM base URL")
+
+    # OpenCode Zen — free model gateway
+    zen_api_key: Optional[str] = Field(default=None, description="OpenCode Zen API key (enables free models)")
+    zen_base_url: str = Field(default="https://opencode.ai/zen/v1", description="Zen API base URL")
+    zen_free_only: bool = Field(default=True, description="Use only free models from Zen")
+    zen_model_cache_ttl: int = Field(default=3600, description="Seconds to cache free models list")
+    zen_preferred_model: Optional[str] = Field(default=None, description="Force a specific free model ID")
 
     # Search
     tavily_api_key: Optional[str] = Field(default=None, description="Tavily search API key")
