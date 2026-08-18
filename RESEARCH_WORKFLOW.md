@@ -4,7 +4,7 @@
 > **Environment Check:** `python scripts/check_environment.py`  
 > **Setup:** See `SETUP.md` for full installation  
 > **Skill Reference:** See `AGENTS.md` for skill catalog  
-> **Last Updated:** 2026-07-05
+> **Last Updated:** 2026-08-18
 
 ---
 
@@ -167,6 +167,8 @@ npm install
 
 ### 3.1 MCP Servers (via `.vscode/mcp.json`)
 
+> `.vscode/mcp.json` is local-only config (gitignored) — create it per machine as needed. The servers below are documented for reference.
+
 | Server                  | Tools / Capabilities                                                         | When to Use                                                      | Setup Needed                          |
 | ----------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------- | ------------------------------------- |
 | **filesystem**          | Read/write workspace files                                                   | Always available — reading/writing any file                      | None (pre-configured)                 |
@@ -188,10 +190,10 @@ npm install
 
 ### 3.3 npm Scripts
 
-| Script           | Command                                          | Purpose                       |
-| ---------------- | ------------------------------------------------ | ----------------------------- |
-| `npm run format` | `prettier --write .`                             | Format all markdown/JSON/YAML |
-| `npm run setup`  | `pip install -r requirements.txt && npm install` | Full dependency install       |
+| Script           | Command                                     | Purpose                       |
+| ---------------- | ------------------------------------------- | ----------------------------- |
+| `npm run format` | `prettier --write .`                        | Format all markdown/JSON/YAML |
+| `npm run setup`  | `uv pip install -e ".[all]" && npm install` | Full dependency install       |
 
 ### 3.4 MCP Web Search & Reader Tools
 
@@ -558,15 +560,15 @@ pip list  # Should show packages from requirements.txt
 
 ### If Something Is Missing
 
-| Problem                     | Solution                                               |
-| --------------------------- | ------------------------------------------------------ |
-| Python packages missing     | `pip install -r requirements.txt`                      |
-| npm packages missing        | `npm install`                                          |
-| LaTeX not found             | Install MiKTeX from <https://miktex.org/download>      |
-| MCP server not working      | Check `.vscode/mcp.json` config                        |
-| Virtual environment missing | `python -m venv .venv && .\.venv\Scripts\Activate.ps1` |
-| General setup issues        | Run `.\scripts\setup_env.ps1` or see `SETUP.md`        |
+| Problem                     | Solution                                          |
+| --------------------------- | ------------------------------------------------- |
+| Python packages missing     | `uv pip install -e ".[all]"`                      |
+| npm packages missing        | `npm install`                                     |
+| LaTeX not found             | Install MiKTeX from <https://miktex.org/download> |
+| MCP server not working      | Check `.vscode/mcp.json` config                   |
+| Virtual environment missing | `uv venv .venv && .\.venv\Scripts\Activate.ps1`   |
+| General setup issues        | Run `.\scripts\setup_env.ps1` or see `SETUP.md`   |
 
 ---
 
-Last updated: 2026-07-04
+Last updated: 2026-08-18
