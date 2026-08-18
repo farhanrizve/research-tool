@@ -45,6 +45,7 @@ outputs/
 data/outputs/
 pipeline/outputs/
 model_state/
+.knowledge/
 *.safetensors
 *.pth
 *.pt
