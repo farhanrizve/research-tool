@@ -1,15 +1,15 @@
 ---
 name: environment-awareness
 description: |
-  Environment awareness skill — detects the current system, available MCP servers,
-  agent plugins, installed runtimes, and tool capabilities. Use when: the user asks
-  "what tools do I have?", "what MCP servers are available?", "check my environment",
-  "what can you do?", "what extensions are loaded?", or when a task requires knowing
-  what external tools/APIs/capabilities are reachable.
+    Environment awareness skill — detects the current system, available MCP servers,
+    agent plugins, installed runtimes, and tool capabilities. Use when: the user asks
+    "what tools do I have?", "what MCP servers are available?", "check my environment",
+    "what can you do?", "what extensions are loaded?", or when a task requires knowing
+    what external tools/APIs/capabilities are reachable.
 license: MIT
 metadata:
-  author: research-tool
-  version: "1.0.0"
+    author: research-tool
+    version: "1.0.0"
 ---
 
 # Environment Awareness
@@ -22,6 +22,7 @@ tools, runtimes, MCP servers, and agent plugins are available in the current wor
 ## When to Apply
 
 Use this skill when:
+
 - User asks "what tools do you have?" or "what can you access?"
 - User asks about MCP servers, agent plugins, or extensions
 - A task requires an external tool (browser, database, file system, API) and you need
@@ -81,19 +82,21 @@ if (Test-Path .env.example)    { "Has .env.example template" }
 MCP (Model Context Protocol) servers extend the AI assistant with external tools.
 Check for MCP configuration in these locations (in priority order):
 
-| Location | Scope |
-|----------|-------|
-| `.vscode/mcp.json` | Workspace — VS Code MCP config |
-| `~/.config/mcp/config.json` | User — global MCP config |
-| `mcp.json` (project root) | Project — standalone MCP config |
-| `.mcp/` directory | Project — MCP server definitions |
+| Location                    | Scope                            |
+| --------------------------- | -------------------------------- |
+| `.vscode/mcp.json`          | Workspace — VS Code MCP config   |
+| `~/.config/mcp/config.json` | User — global MCP config         |
+| `mcp.json` (project root)   | Project — standalone MCP config  |
+| `.mcp/` directory           | Project — MCP server definitions |
 
 Read any found MCP config files and extract:
+
 - **Server names** and their transport types (`stdio`, `sse`, `streamable-http`)
 - **Command** or **URL** for each server
 - **Environment variables** each server needs
 
 For each MCP server, determine its **status**:
+
 - `stdio` servers: check if the command binary exists (`Get-Command <cmd>`)
 - `sse`/`http` servers: check if the URL is reachable (`Invoke-WebRequest -Uri <url> -Method HEAD`)
 
@@ -123,19 +126,19 @@ code --list-extensions 2>$null
 
 Based on detected MCP servers and extensions, classify available tools into categories:
 
-| Category | Key Tools | When to Use |
-|----------|-----------|-------------|
-| **File System** | `read_file`, `write_file`, `grep_search`, `list_dir` | Always available — workspace access |
-| **Browser/Web** | `open_browser_page`, `click_element`, `navigate_page`, `run_playwright_code` | UI testing, screenshots, web scraping |
-| **Terminal** | `run_in_terminal`, `get_terminal_output` | Build, run, install, debug |
-| **Search** | `vscode-websearchforcopilot_webSearch`, `mcp_tavily_*` | Up-to-date web information |
-| **GitHub** | `mcp_github_*` | PRs, issues, code search |
-| **Figma** | `mcp_figma_*` | Design work, component mapping |
-| **Documentation** | `mcp_microsoft_*`, `mcp_context7_*` | Library/API docs lookup |
-| **Web Crawling** | `mcp_firecrawl_*`, `mcp_tavily_*` | Multi-page research, site mapping |
-| **Database** | `dbclient_*` | SQL queries, schema inspection |
-| **Notebook** | `run_notebook_cell`, `create_new_jupyter_notebook` | Data analysis, exploration |
-| **Memory** | `memory` (create/view/str_replace) | Cross-session notes |
+| Category          | Key Tools                                                                    | When to Use                           |
+| ----------------- | ---------------------------------------------------------------------------- | ------------------------------------- |
+| **File System**   | `read_file`, `write_file`, `grep_search`, `list_dir`                         | Always available — workspace access   |
+| **Browser/Web**   | `open_browser_page`, `click_element`, `navigate_page`, `run_playwright_code` | UI testing, screenshots, web scraping |
+| **Terminal**      | `run_in_terminal`, `get_terminal_output`                                     | Build, run, install, debug            |
+| **Search**        | `vscode-websearchforcopilot_webSearch`, `mcp_tavily_*`                       | Up-to-date web information            |
+| **GitHub**        | `mcp_github_*`                                                               | PRs, issues, code search              |
+| **Figma**         | `mcp_figma_*`                                                                | Design work, component mapping        |
+| **Documentation** | `mcp_microsoft_*`, `mcp_context7_*`                                          | Library/API docs lookup               |
+| **Web Crawling**  | `mcp_firecrawl_*`, `mcp_tavily_*`                                            | Multi-page research, site mapping     |
+| **Database**      | `dbclient_*`                                                                 | SQL queries, schema inspection        |
+| **Notebook**      | `run_notebook_cell`, `create_new_jupyter_notebook`                           | Data analysis, exploration            |
+| **Memory**        | `memory` (create/view/str_replace)                                           | Cross-session notes                   |
 
 ---
 
@@ -145,37 +148,43 @@ When the user asks about their environment, present findings in this structure:
 
 ```markdown
 ## 🖥️ System
+
 - **OS:** Windows 10.0.x / macOS / Linux
 - **Machine:** HOSTNAME
 - **Shell:** PowerShell 7.x / bash / zsh
 
 ## ⚡ Runtimes
-| Runtime | Version | Status |
-|---------|---------|--------|
-| Python  | 3.14.6  | ✅ EnvKit |
-| Node.js | 26.7.0  | ✅ |
-| uv      | 0.12.5  | ✅ |
+
+| Runtime | Version | Status           |
+| ------- | ------- | ---------------- |
+| Python  | 3.14.6  | ✅ EnvKit        |
+| Node.js | 26.7.0  | ✅               |
+| uv      | 0.12.5  | ✅               |
 | Go      | —       | ❌ Not installed |
 
 ## 🔌 MCP Servers
-| Server | Transport | Status | Tools Provided |
-|--------|-----------|--------|----------------|
-| filesystem | stdio | ✅ Running | read, write, search |
-| tavily | stdio | ✅ Running | search, crawl, extract |
-| playwright | stdio | ⚠️ Not started | browser automation |
+
+| Server     | Transport | Status         | Tools Provided         |
+| ---------- | --------- | -------------- | ---------------------- |
+| filesystem | stdio     | ✅ Running     | read, write, search    |
+| tavily     | stdio     | ✅ Running     | search, crawl, extract |
+| playwright | stdio     | ⚠️ Not started | browser automation     |
 
 ## 🧩 Agent Plugins
-| Plugin | Status | Capabilities |
-|--------|--------|-------------|
-| github.vscode-pull-request | ✅ | PR review, issue management |
-| figma.mcp-server | ✅ | Design-to-code, Figma read/write |
+
+| Plugin                     | Status | Capabilities                     |
+| -------------------------- | ------ | -------------------------------- |
+| github.vscode-pull-request | ✅     | PR review, issue management      |
+| figma.mcp-server           | ✅     | Design-to-code, Figma read/write |
 
 ## 📦 Workspace
+
 - **Project type:** Python (pyproject.toml)
 - **Config:** .env ✅, .env.example ✅
 - **Venv:** .venv/ ✅
 
 ## 🔧 Quick Reference
+
 - **Search web:** use `vscode-websearchforcopilot_webSearch`
 - **Browser test:** activate web interaction tools, then use playwright
 - **GitHub:** activate github tools, then use mcp_github_* tools
