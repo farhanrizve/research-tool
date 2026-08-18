@@ -61,7 +61,7 @@ class BaseAgent(ABC):
         max_tokens: int = 4096,
         json_mode: bool = False,
         use_cache: bool = True,
-        retries: int = 2,
+        retries: int = 3,
     ) -> str:
         """Async LLM call with caching and retry.
 
@@ -141,7 +141,7 @@ class BaseAgent(ABC):
 
         all_models = [model_name] + [f"openai/{m}" for m in fallback_models[:3]]
 
-        for model_attempt in all_models:
+        for model_idx, model_attempt in enumerate(all_models):
             current_kwargs = dict(kwargs)
             current_kwargs["model"] = model_attempt
             for attempt in range(retries + 1):
@@ -154,13 +154,15 @@ class BaseAgent(ABC):
                 except Exception as e:
                     last_error = e
                     if attempt < retries:
-                        wait = 2 ** attempt
+                        # Exponential backoff: 3s, 6s, 12s — longer for Zen free tier
+                        wait = 3 * (2 ** attempt)
                         self._log(f"LLM call failed (attempt {attempt + 1}): {e} — retrying in {wait}s")
                         await asyncio.sleep(wait)
 
-            # Move to next fallback model
-            if use_zen and model_attempt != all_models[-1]:
+            # Delay before switching to next fallback model
+            if model_idx < len(all_models) - 1:
                 self._log(f"Trying fallback model: {model_attempt}")
+                await asyncio.sleep(2)
 
         # All retries exhausted
         self._log(f"LLM call failed after {retries + 1} attempts: {last_error}")

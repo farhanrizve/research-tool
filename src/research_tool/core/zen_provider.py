@@ -207,11 +207,13 @@ class ZenProvider:
 
         Returns:
             Dict with model, api_base, api_key, and extra headers.
+            Note: api_base is the base URL (e.g. 'https://opencode.ai/zen/v1'),
+            NOT the chat completions endpoint — litellm appends /chat/completions.
         """
         model = self.get_model(refresh=refresh)
         return {
             "model": f"openai/{model}",
-            "api_base": self.chat_endpoint,
+            "api_base": self.base_url,
             "api_key": self.api_key,
             "extra_headers": {
                 "User-Agent": "ResearchTool/0.2.0",

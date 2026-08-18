@@ -330,20 +330,41 @@ class Orchestrator:
             if time.time() - ts < CACHE_TTL:
                 return json.loads(cached) if isinstance(cached, str) else cached
 
-        response = litellm.completion(
-            model=model_name,
-            messages=messages,
-            temperature=0.3,
-            max_tokens=1024,
-            response_format={"type": "json_object"},
-            **litellm_kwargs,
-        )
-        text = response.choices[0].message.content or "{}"
+        # Retry with fallback models for Zen free tier
+        all_models = [model_name]
+        if use_zen:
+            from research_tool.core.zen_provider import PREFERRED_ORDER
+            all_models += [
+                f"openai/{m}" for m in PREFERRED_ORDER
+                if f"openai/{m}" != model_name
+            ][:3]
 
-        # Cache the result
-        _llm_cache[key] = (text, time.time())
+        last_error: Exception | None = None
+        for attempt_idx, current_model in enumerate(all_models):
+            current_kwargs = {
+                "model": current_model,
+                "messages": messages,
+                "temperature": 0.3,
+                "max_tokens": 1024,
+                "response_format": {"type": "json_object"},
+            }
+            if attempt_idx == 0:
+                current_kwargs.update(litellm_kwargs)
+            for retry in range(4):
+                try:
+                    response = litellm.completion(**current_kwargs)
+                    text = response.choices[0].message.content or "{}"
+                    _llm_cache[key] = (text, time.time())
+                    return json.loads(text)
+                except Exception as e:
+                    last_error = e
+                    if retry < 3:
+                        wait = 3 * (2 ** retry)
+                        time.sleep(wait)
 
-        return json.loads(text)
+            # Delay before switching fallback
+            if attempt_idx < len(all_models) - 1:
+                time.sleep(2)
 
     def search_knowledge(self, query: str, k: int = 10) -> list[dict[str, Any]]:
         """Search the knowledge base for relevant indexed content."""

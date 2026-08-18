@@ -70,9 +70,18 @@ def get_settings() -> Settings:
 
 
 def load_project_config(project_dir: Path) -> Settings:
-    """Load settings with project-specific .env overrides."""
+    """Load settings with project-specific .env overrides.
+
+    Checks project_dir/.env first, then falls back to the repository root .env.
+    """
     global _settings
     env_file = project_dir / ".env"
+    if not env_file.exists():
+        # Fall back to repo root .env
+        repo_root = Path(__file__).resolve().parent.parent.parent.parent
+        root_env = repo_root / ".env"
+        if root_env.exists():
+            env_file = root_env
     _settings = Settings(
         _env_file=str(env_file) if env_file.exists() else None,
         project_dir=project_dir,

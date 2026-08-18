@@ -40,12 +40,18 @@ htmlcov/
 *.ipynb_checkpoints
 .zeppelin/
 
+# ── Secrets ──────────────────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
 # ── Research / Data Outputs ──────────────────────────────────────────────────
 outputs/
 data/outputs/
 pipeline/outputs/
 model_state/
 .knowledge/
+test-run/
 *.safetensors
 *.pth
 *.pt
