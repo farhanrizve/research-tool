@@ -35,8 +35,12 @@ def search_literature(
     databases = databases or ["semantic_scholar"]
     all_results: list[dict[str, Any]] = []
 
-    for db in databases:
+    for i, db in enumerate(databases):
         try:
+            # Small delay between searches to avoid rate limiting
+            if i > 0:
+                import time
+                time.sleep(1)
             if db == "semantic_scholar":
                 results = _search_semantic_scholar(query, limit, year_from, year_to)
             elif db == "arxiv":
@@ -58,8 +62,11 @@ def _search_semantic_scholar(
     limit: int = 20,
     year_from: Optional[int] = None,
     year_to: Optional[int] = None,
+    max_retries: int = 3,
 ) -> list[dict[str, Any]]:
-    """Search Semantic Scholar API."""
+    """Search Semantic Scholar API with retry on 429."""
+    import time
+
     url = "https://api.semanticscholar.org/graph/v1/paper/search"
     params = {
         "query": query,
@@ -70,10 +77,19 @@ def _search_semantic_scholar(
         year_range = f"{year_from or ''}-{year_to or ''}"
         params["year"] = year_range
 
-    with httpx.Client(timeout=30, headers={"User-Agent": "ResearchTool/0.1.0"}) as client:
-        resp = client.get(url, params=params)
-        resp.raise_for_status()
-        data = resp.json()
+    for attempt in range(max_retries):
+        with httpx.Client(timeout=30, headers={"User-Agent": "ResearchTool/0.1.0"}) as client:
+            resp = client.get(url, params=params)
+            if resp.status_code == 429:
+                wait = 2 ** attempt  # 1s, 2s, 4s
+                print(f"  [paper_search] Semantic Scholar rate limited, retrying in {wait}s...")
+                time.sleep(wait)
+                continue
+            resp.raise_for_status()
+            data = resp.json()
+            break
+    else:
+        raise Exception(f"Semantic Scholar: {max_retries} retries exhausted")
 
     papers = []
     for item in data.get("data", []):

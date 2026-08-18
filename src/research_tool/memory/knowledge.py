@@ -88,12 +88,12 @@ class KnowledgeBase:
             return 0
 
         metadata_base = {
-            "title": title,
+            "title": str(title),
             "authors": json.dumps(authors or []),
-            "year": year or 0,
-            "doi": doi,
-            "url": url,
-            "source": source,
+            "year": int(year) if year else 0,
+            "doi": str(doi or ""),
+            "url": str(url or ""),
+            "source": str(source or ""),
         }
 
         if self._use_vector:

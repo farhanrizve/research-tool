@@ -50,6 +50,7 @@ class ResearchPlan:
     sub_questions: list[str] = field(default_factory=list)
     estimated_papers: int = 20
     steps: list[str] = field(default_factory=list)
+    project_dir: str = "."
 
 
 class Orchestrator:
@@ -124,6 +125,16 @@ class Orchestrator:
         session.update_status("discovering")
         with spinner("🔍 Searching for papers (parallel)..."):
             papers = self._parallel_discover(plan)
+
+        # Deduplicate by title before indexing
+        seen_titles: set[str] = set()
+        unique_papers: list[dict] = []
+        for paper in papers:
+            key = paper.get("title", "").lower().strip()
+            if key and key not in seen_titles:
+                seen_titles.add(key)
+                unique_papers.append(paper)
+        papers = unique_papers
 
         # Index found papers into knowledge base
         indexed_count = 0
@@ -236,6 +247,7 @@ class Orchestrator:
             sources=sources,
             sub_questions=sub_questions,
             estimated_papers=cfg["papers"],
+            project_dir=str(self.project_dir),
             steps=[
                 "Search academic databases (parallel)",
                 "Index papers into knowledge base",
