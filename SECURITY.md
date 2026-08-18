@@ -13,8 +13,8 @@ security vulnerabilities.
 
 - **Affected:** `image-size` `<= 2.0.2` (transitive dependency of `pptxgenjs`)
 - **Advisories:**
-  - [GHSA-w3rx-r6r6-pgpr](https://github.com/advisories/GHSA-w3rx-r6r6-pgpr) (CVE-2025-71330) — ICNS parser infinite loop
-  - [GHSA-5p2g-fcmc-qvqq](https://github.com/advisories/GHSA-5p2g-fcmc-qvqq) (CVE-2025-71329) — JXL/HEIF parser infinite loop
+    - [GHSA-w3rx-r6r6-pgpr](https://github.com/advisories/GHSA-w3rx-r6r6-pgpr) (CVE-2025-71330) — ICNS parser infinite loop
+    - [GHSA-5p2g-fcmc-qvqq](https://github.com/advisories/GHSA-5p2g-fcmc-qvqq) (CVE-2025-71329) — JXL/HEIF parser infinite loop
 - **Patched versions:** None published at this time.
 - **Impact:** A crafted image buffer (ICNS/JXL/HEIF) can block the Node.js
   event loop indefinitely. Only reachable when generating PowerPoint files
