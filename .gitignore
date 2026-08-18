@@ -15,8 +15,6 @@ archives/
 tmp/
 *.tmp
 *.bak
-*.swp
-*.swo
 
 # ── Logs ─────────────────────────────────────────────────────────────────────
 *.log
@@ -109,14 +107,6 @@ browser.log
 # by default, but this explicit rule prevents accidental future ignores)
 !.agents/
 
-# ── Environment ──────────────────────────────────────────────────────────────
-.env
-.env.*
-!.env.example
-*.key
-*.pem
-*.cert
-
 # ── Large Datasets (track via DVC or external storage) ───────────────────────
 data/raw/
 data/processed/
@@ -129,4 +119,3 @@ out/
 site/
 _build/
 book/
-test-run/
