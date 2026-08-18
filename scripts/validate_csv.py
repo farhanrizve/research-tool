@@ -14,18 +14,17 @@ Usage:
     python scripts/validate_csv.py <input.csv> --output report.md
 """
 
+import argparse
 import csv
-import json
 import os
 import sys
-import argparse
 from collections import Counter
 from datetime import datetime
 
 
 def load_csv(filepath: str, encoding: str = "utf-8") -> tuple:
     """Load a CSV file and return (header, rows)."""
-    with open(filepath, "r", encoding=encoding) as f:
+    with open(filepath, encoding=encoding) as f:
         reader = csv.reader(f)
         header = next(reader)
         rows = list(reader)
@@ -196,7 +195,7 @@ def _generate_markdown(filename, timestamp, structure, col_stats) -> str:
             )
         lines.append("")
 
-    lines.append(f"## Row Health")
+    lines.append("## Row Health")
     lines.append(f"- **Fully empty rows:** {len(structure['empty_rows'])}")
     if structure["empty_rows"]:
         lines.append(f"  - Row numbers: {structure['empty_rows']}")

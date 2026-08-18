@@ -102,11 +102,7 @@ def create_table_node(graph, table_name: str, columns: list, color: bool = False
     rows = []
     colors = TABLE_COLORS
 
-    if color:
-        header_bg = "#3498db"
-    else:
-        header_bg = "#000000"
-
+    header_bg = "#3498db" if color else "#000000"
     # Header row
     rows.append(
         f'<TR><TD COLSPAN="2" BGCOLOR="{header_bg}" ALIGN="CENTER">'
@@ -130,10 +126,7 @@ def create_table_node(graph, table_name: str, columns: list, color: bool = False
             suffix = ""  # Will be wrapped inside bold if PK
 
         # Bold primary keys
-        if "PK" in role:
-            col_display = f"<B>{prefix}{col}{suffix}</B>"
-        else:
-            col_display = f"{prefix}{col}{suffix}"
+        col_display = f"<B>{prefix}{col}{suffix}</B>" if "PK" in role else f"{prefix}{col}{suffix}"
 
         dtype_display = (
             f'<FONT POINT-SIZE="9" COLOR="{colors["fk_text"]}">{dtype}</FONT>'
@@ -165,7 +158,7 @@ def add_foreign_key(graph, src: str, dst: str, label: str = "1:N"):
 
 def parse_sql_ddl(sql_path: str) -> dict:
     """Parse SQL CREATE TABLE statements into table definitions."""
-    with open(sql_path, "r", encoding="utf-8") as f:
+    with open(sql_path, encoding="utf-8") as f:
         content = f.read()
 
     tables = {}
@@ -193,7 +186,7 @@ def parse_sql_ddl(sql_path: str) -> dict:
                 match_pk = re.search(r"\(`?(\w+)`?\)", line)
                 if match_pk:
                     pk_col = match_pk.group(1)
-                    for i, (c, t, r) in enumerate(columns):
+                    for i, (c, t, _r) in enumerate(columns):
                         if c == pk_col:
                             columns[i] = (c, t, "PK")
                 continue
@@ -245,7 +238,7 @@ def parse_json_schema(json_path: str) -> dict:
       ]
     }
     """
-    with open(json_path, "r", encoding="utf-8") as f:
+    with open(json_path, encoding="utf-8") as f:
         data = json.load(f)
 
     tables = {}
@@ -263,7 +256,7 @@ def parse_csv_header(csv_path: str) -> dict:
     """Create a simple table diagram from a CSV file (columns only)."""
     import csv
 
-    with open(csv_path, "r", encoding="utf-8") as f:
+    with open(csv_path, encoding="utf-8") as f:
         reader = csv.reader(f)
         header = next(reader)
 
@@ -293,7 +286,7 @@ def generate_diagram(
 
     # Add foreign key edges
     for table_name, table_def in tables.items():
-        for fk_col, ref_table, ref_col in table_def.get("fk_refs", []):
+        for _fk_col, ref_table, _ref_col in table_def.get("fk_refs", []):
             if ref_table in tables:
                 add_foreign_key(dot, table_name, ref_table)
 

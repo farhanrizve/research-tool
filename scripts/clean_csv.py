@@ -17,16 +17,16 @@ Usage:
     python scripts/clean_csv.py <input.csv> --rename "Old Name:New Name"
 """
 
+import argparse
 import csv
 import os
 import re
 import sys
-import argparse
 
 
 def load_csv(filepath: str, encoding: str = "utf-8") -> tuple:
     """Load a CSV file and return (header, rows)."""
-    with open(filepath, "r", encoding=encoding) as f:
+    with open(filepath, encoding=encoding) as f:
         reader = csv.reader(f)
         header = next(reader)
         rows = list(reader)

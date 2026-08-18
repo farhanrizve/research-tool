@@ -21,13 +21,32 @@ Exit codes:
 """
 
 import argparse
+import contextlib
+import importlib.util
 import json
 import os
+import platform
 import re
 import shutil
 import subprocess
 import sys
-import platform
+
+# ── Force UTF-8 output (Windows console defaults to cp1252, which cannot
+# ── encode the box-drawing/emoji characters used below) ─────────────────────
+if sys.platform == "win32":
+    try:
+        import ctypes
+
+        kernel32 = ctypes.windll.kernel32
+        kernel32.SetConsoleOutputCP(65001)
+        kernel32.SetConsoleCP(65001)
+    except Exception:  # noqa: BLE001 - best-effort
+        pass
+for _stream in (sys.stdout, sys.stderr):
+    _reconfigure = getattr(_stream, "reconfigure", None)
+    if _reconfigure is not None:
+        with contextlib.suppress(Exception):
+            _reconfigure(encoding="utf-8", errors="replace")
 
 # ── ANSI Colors ──────────────────────────────────────────────────────────────
 
@@ -112,9 +131,17 @@ def cprint(text: str, color: str = "", bold: bool = False, end: str = "\n"):
 
 def run_cmd(cmd: list, timeout: int = 15) -> tuple:
     """Run a command and return (returncode, stdout, stderr)."""
+    # Resolve the executable via PATH. On Windows, bare names like `npm`
+    # can resolve to an extensionless shim that CreateProcess cannot run,
+    # while `shutil.which` correctly finds `npm.cmd`.
+    resolved = list(cmd)
+    if resolved:
+        exe = shutil.which(resolved[0])
+        if exe:
+            resolved[0] = exe
     try:
         proc = subprocess.run(
-            cmd, capture_output=True, text=True, timeout=timeout
+            resolved, capture_output=True, text=True, timeout=timeout
         )
         return proc.returncode, proc.stdout.strip(), proc.stderr.strip()
     except FileNotFoundError:
@@ -202,8 +229,8 @@ def find_latex() -> list:
 
     # Also check common MiKTeX install paths
     common_paths = [
-        os.path.join(os.environ.get("ProgramFiles", "C:\\Program Files"), "MiKTeX", "miktex", "bin", "x64"),
-        os.path.join(os.environ.get("ProgramFiles(x86)", "C:\\Program Files (x86)"), "MiKTeX", "miktex", "bin", "x64"),
+        os.path.join(os.environ.get("PROGRAMFILES", "C:\\Program Files"), "MiKTeX", "miktex", "bin", "x64"),
+        os.path.join(os.environ.get("PROGRAMFILES(X86)", "C:\\Program Files (x86)"), "MiKTeX", "miktex", "bin", "x64"),
         os.path.join(os.environ.get("LOCALAPPDATA", ""), "Programs", "MiKTeX", "miktex", "bin", "x64"),
     ]
     for path in common_paths:
@@ -233,17 +260,16 @@ def check_mcp_servers() -> list:
     mcp_servers_configured = {}
     if os.path.isfile(mcp_json_path):
         try:
-            with open(mcp_json_path, "r") as f:
+            with open(mcp_json_path) as f:
                 mcp_data = json.load(f)
             mcp_servers_configured = mcp_data.get("servers", {})
-        except (json.JSONDecodeError, IOError):
+        except (OSError, json.JSONDecodeError):
             pass
 
     for name, description in servers_expected.items():
         if name in mcp_servers_configured:
             server_config = mcp_servers_configured[name]
             cmd = server_config.get("command", "")
-            args = server_config.get("args", [])
             # Check if the command is available
             cmd_path = shutil.which(cmd) if cmd else None
             if cmd_path or cmd == "npx":
@@ -352,13 +378,18 @@ def run_checks(verbose: bool = False) -> CheckReport:
     else:
         report.add("System & Runtimes", "Python", "fail", f"{py_ver} (need ≥3.10)", critical=True)
 
-    # Pip
+    # Pip / uv (package manager)
     rc, out, _ = run_cmd([sys.executable, "-m", "pip", "--version"])
     if rc == 0 and out:
         ver = out.split()[1] if len(out.split()) > 1 else "found"
         report.add("System & Runtimes", "pip", "pass", ver, critical=True)
     else:
-        report.add("System & Runtimes", "pip", "fail", "not found", critical=True)
+        # uv-based venvs (created with `uv venv`) have no pip — that's fine
+        rc_uv, out_uv, _ = run_cmd(["uv", "--version"])
+        if rc_uv == 0 and out_uv:
+            report.add("System & Runtimes", "pip", "pass", f"uv ({out_uv.strip()})", critical=True)
+        else:
+            report.add("System & Runtimes", "pip", "fail", "not found (install pip or uv)", critical=True)
 
     # Node.js
     node_ver = check_version(["node"])
@@ -478,10 +509,9 @@ def run_checks(verbose: bool = False) -> CheckReport:
         report.add("Data Extraction", "CSV/XLSX → Markdown (tabulate)", "info", "tabulate not installed — optional for markdown conversion")
 
     # HTML → Markdown
-    try:
-        import markdownify
+    if importlib.util.find_spec("markdownify"):
         report.add("Data Extraction", "HTML/Web → Markdown (markdownify)", "pass", "found")
-    except ImportError:
+    else:
         report.add("Data Extraction", "HTML/Web → Markdown (markdownify)", "info", "markdownify not installed — optional for web→md")
 
     # ── 6. Web Search & Browser ───────────────────────────────────────────

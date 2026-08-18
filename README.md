@@ -32,10 +32,9 @@ Powered by [VS Code](https://code.visualstudio.com) + [GitHub Copilot](https://g
 # 2. Activate Python virtual environment
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
 
-# 3. Install Node.js dependencies
-npm install
+# 3. Install the package (editable) with all extras
+uv pip install -e ".[all]"
 
 # 4. Verify everything is ready
 python scripts/check_environment.py

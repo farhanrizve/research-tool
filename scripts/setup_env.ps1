@@ -38,13 +38,20 @@ try {
     exit 1
 }
 
-# Check pip
+# Check uv (package manager — preferred) or pip
 try {
-    $pipVersion = pip --version 2>&1
-    Write-Host "  ✅ pip: $($pipVersion.Split()[1])" -ForegroundColor Green
+    $uvVersion = uv --version 2>&1
+    Write-Host "  ✅ uv: $uvVersion" -ForegroundColor Green
+    $UseUv = $true
 } catch {
-    Write-Host "  ❌ pip not found." -ForegroundColor Red
-    exit 1
+    try {
+        $pipVersion = pip --version 2>&1
+        Write-Host "  ✅ pip: $($pipVersion.Split()[1])" -ForegroundColor Green
+        $UseUv = $false
+    } catch {
+        Write-Host "  ❌ Neither uv nor pip found. Install uv (https://docs.astral.sh/uv/) or pip." -ForegroundColor Red
+        exit 1
+    }
 }
 
 # Check git
@@ -63,14 +70,25 @@ Write-Host "[2/5] Setting up Python virtual environment..." -ForegroundColor Yel
 if (Test-Path ".venv") {
     Write-Host "  ℹ Virtual environment already exists." -ForegroundColor Yellow
 } else {
-    python -m venv .venv
+    if ($UseUv) {
+        uv venv .venv
+    } else {
+        python -m venv .venv
+    }
     Write-Host "  ✅ Created .venv" -ForegroundColor Green
 }
 
-# Activate and upgrade pip
-$pip = Join-Path $RepoRoot ".venv\Scripts\pip.exe"
-& $pip install --upgrade pip -q
-Write-Host "  ✅ pip upgraded" -ForegroundColor Green
+# Install the package (editable) with all extras
+if ($UseUv) {
+    uv pip install -e ".[all]" -q
+    Write-Host "  ✅ research-tool installed (uv)" -ForegroundColor Green
+} else {
+    $pip = Join-Path $RepoRoot ".venv\Scripts\pip.exe"
+    & $pip install --upgrade pip -q
+    Write-Host "  ✅ pip upgraded" -ForegroundColor Green
+    & $pip install -e ".[all]" -q
+    Write-Host "  ✅ research-tool installed (pip)" -ForegroundColor Green
+}
 
 Write-Host ""
 
@@ -102,7 +120,11 @@ $pythonPackages = @(
 foreach ($pkg in $pythonPackages) {
     Write-Host "  Installing $pkg..." -NoNewline
     try {
-        & $pip install $pkg -q --no-warn-script-location
+        if ($UseUv) {
+            uv pip install $pkg -q
+        } else {
+            & $pip install $pkg -q --no-warn-script-location
+        }
         Write-Host " ✅" -ForegroundColor Green
     } catch {
         Write-Host " ❌ Failed" -ForegroundColor Red

@@ -38,13 +38,15 @@ python scripts/check_environment.py
 
 ## 2. Python Environment
 
-Create and activate a virtual environment:
+Create and activate a virtual environment (uses [uv](https://docs.astral.sh/uv/) — fast, no pip needed):
 
 ```powershell
-python -m venv .venv
+uv venv .venv
 .\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
+uv pip install -e ".[all]"
 ```
+
+> **Note:** The `research-tool` package itself (CLI, agents, orchestrator) is installed editable from `pyproject.toml`. The `requirements.txt` file only covers optional data-analysis libraries (pandas, numpy, etc.) and is **not** required for the core CLI to work.
 
 ### Required Python Packages
 
@@ -254,12 +256,13 @@ This will check:
 
 ```powershell
 # 1. Set up Python environment
-python -m venv .venv
+uv venv .venv
 .\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
+uv pip install -e ".[all]"
 
-# 2. Install Node dependencies
-npm install
+# 2. Configure environment (optional — enables free Zen LLM)
+copy .env.example .env
+# Edit .env and set RESEARCH_ZEN_API_KEY
 
 # 3. Check everything works
 python scripts/check_environment.py

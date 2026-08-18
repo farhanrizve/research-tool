@@ -106,7 +106,7 @@ Skills are specialized instruction files that guide the AI assistant in performi
 
 ## 2. MCP Servers
 
-MCP (Model Context Protocol) servers extend the AI assistant's capabilities with external tools. Configuration is in `.vscode/mcp.json`.
+MCP (Model Context Protocol) servers extend the AI assistant's capabilities with external tools. Configuration lives in `.vscode/mcp.json` — a local file (gitignored) you create per machine, so it is not tracked in the repo.
 
 ### Pre-configured MCP Servers
 
@@ -155,11 +155,11 @@ This repository contains reusable AI agent configuration files that can be used 
 
 ### Agent Configuration Files
 
-| File                    | Purpose                                 |
-| ----------------------- | --------------------------------------- |
-| `.vscode/mcp.json`      | MCP server configuration for VS Code    |
-| `.vscode/settings.json` | VS Code settings optimized for research |
-| AGENTS.md (this file)   | Agent documentation and usage guide     |
+| File                    | Purpose                                                        |
+| ----------------------- | -------------------------------------------------------------- |
+| `.vscode/mcp.json`      | MCP server configuration for VS Code _(local, not tracked)_    |
+| `.vscode/settings.json` | VS Code settings optimized for research _(local, not tracked)_ |
+| AGENTS.md (this file)   | Agent documentation and usage guide                            |
 
 ### Agent Workflows
 
@@ -220,14 +220,14 @@ This repository contains reusable AI agent configuration files that can be used 
 ### First-Time Setup
 
 ```powershell
-# 1. Install Python virtual environment
-python -m venv .venv
+# 1. Install Python virtual environment (uses uv — fast, no pip needed)
+uv venv .venv
 .\.venv\Scripts\Activate.ps1
 
-# 2. Install Python dependencies
-pip install -r requirements.txt
+# 2. Install the package (editable) with all extras
+uv pip install -e ".[all]"
 
-# 3. Install Node dependencies
+# 3. (Optional) Install Node dependencies
 npm install
 
 # 4. (Optional) Install MCP server dependencies

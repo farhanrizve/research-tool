@@ -1,6 +1,6 @@
 {
   "name": "research-tool",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "AI-assisted research tool with templates, scripts, and MCP servers for academic thesis/dissertation projects",
   "private": true,
   "dependencies": {
@@ -18,8 +18,8 @@
     "format": "prettier --write \"scripts/**/*.py\" \"**/*.md\" \"**/*.json\"",
     "format:check": "prettier --check \"scripts/**/*.py\" \"**/*.md\" \"**/*.json\"",
     "setup": "powershell -ExecutionPolicy Bypass -File scripts/setup_env.ps1",
-    "validate:json": "node -e \"const fs=require('fs'); const g=JSON.parse(fs.readFileSync('.vscode/mcp.json','utf8')); console.log('✅ .vscode/mcp.json valid'); const s=JSON.parse(fs.readFileSync('.vscode/settings.json','utf8')); console.log('✅ .vscode/settings.json valid');\"",
-    "lint:py": "pip install ruff -q && ruff check scripts/ --ignore E501",
+    "validate:json": "node -e \"const fs=require('fs'); for (const f of ['.vscode/mcp.json','.vscode/settings.json']) { if (fs.existsSync(f)) { JSON.parse(fs.readFileSync(f,'utf8')); console.log('✅ '+f+' valid'); } else { console.log('⏭️  '+f+' missing — skipping (local VS Code config, not tracked)'); } }\"",
+    "lint:py": "uvx ruff check scripts/ --ignore E501",
     "docs": "npx -y @mintlify/scrape@latest --output docs"
   },
   "repository": {

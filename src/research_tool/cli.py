@@ -11,6 +11,8 @@ Usage:
 
 from __future__ import annotations
 
+import ctypes
+import sys
 from pathlib import Path
 from typing import Optional
 
@@ -19,6 +21,32 @@ from rich.console import Console
 from rich.panel import Panel
 
 from research_tool import __version__
+
+
+def _force_utf8() -> None:
+    """Force UTF-8 output so emoji render correctly on Windows.
+
+    Windows consoles and pipes commonly default to a legacy codepage (e.g.
+    cp1252) that cannot encode characters like 🧠 or ✅, which makes Rich's
+    console raise UnicodeEncodeError on the very first print.
+    """
+    if sys.platform == "win32":
+        try:
+            kernel32 = ctypes.windll.kernel32
+            kernel32.SetConsoleOutputCP(65001)
+            kernel32.SetConsoleCP(65001)
+        except Exception:  # noqa: BLE001 - best-effort
+            pass
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, "reconfigure", None)
+        if reconfigure is not None:
+            try:
+                reconfigure(encoding="utf-8", errors="replace")
+            except Exception:  # noqa: BLE001 - best-effort
+                pass
+
+
+_force_utf8()
 
 app = typer.Typer(
     name="research",
